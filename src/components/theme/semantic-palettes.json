@@ -1,0 +1,70 @@
+{
+  "families": {
+    "disabled": {
+      "border": "500",
+      "palette": "gray",
+      "solid": "900",
+      "solidHover": "800"
+    },
+    "error": {
+      "border": "500",
+      "palette": "red",
+      "solid": "600",
+      "solidHover": "700"
+    },
+    "info": {
+      "border": "500",
+      "palette": "blue",
+      "solid": "600",
+      "solidHover": "700"
+    },
+    "primary": {
+      "border": "500",
+      "palette": "purple",
+      "solid": "600",
+      "solidHover": "700"
+    },
+    "success": {
+      "border": "600",
+      "palette": "green",
+      "solid": "700",
+      "solidHover": "800"
+    },
+    "warning": {
+      "border": "600",
+      "palette": "orange",
+      "solid": "700",
+      "solidHover": "800"
+    }
+  },
+  "familyShades": {
+    "borderDark": "400",
+    "fgDark": "300",
+    "fgLight": "700",
+    "mutedDark": "800",
+    "mutedLight": "200",
+    "strongDark": "200",
+    "strongLight": "800",
+    "subtleDark": "900",
+    "subtleLight": "100",
+    "surfaceDark": "950",
+    "surfaceLight": "50"
+  },
+  "neutral": {
+    "bg": {
+      "canvas": { "dark": "gray.950", "light": "white" },
+      "muted": { "dark": "gray.800", "light": "gray.100" },
+      "overlay": { "dark": "black", "light": "gray.900" },
+      "subtle": { "dark": "gray.900", "light": "gray.50" }
+    },
+    "border": {
+      "default": { "dark": "gray.800", "light": "gray.200" }
+    },
+    "fg": {
+      "default": { "dark": "gray.50", "light": "gray.900" },
+      "inverse": { "dark": "white", "light": "white" },
+      "muted": { "dark": "gray.300", "light": "gray.700" },
+      "subtle": { "dark": "gray.400", "light": "gray.600" }
+    }
+  }
+}

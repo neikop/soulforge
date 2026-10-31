@@ -1,0 +1,17 @@
+export const guideSections = [
+  { id: 'overview', label: 'Overview', order: '01' },
+  { id: 'typography', label: 'Typography', order: '02' },
+  { id: 'skeletons', label: 'Skeletons', order: '03' },
+  { id: 'buttons', label: 'Buttons', order: '04' },
+  { id: 'inputs', label: 'Inputs', order: '05' },
+  { id: 'selects', label: 'Selects', order: '06' },
+  { id: 'date-picker', label: 'Date Picker', order: '07' },
+  { id: 'file-upload', label: 'File Upload', order: '08' },
+  { id: 'tables', label: 'Tables', order: '09' },
+  { id: 'pagination', label: 'Pagination', order: '10' },
+  { id: 'feedback', label: 'Feedback', order: '11' },
+  { id: 'overlays', label: 'Overlays', order: '12' },
+  { id: 'shared-ui', label: 'Shared UI', order: '13' },
+  { id: 'tokens', label: 'Tokens', order: '14' },
+  { id: 'forms', label: 'Forms', order: '15' },
+] as const

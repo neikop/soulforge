@@ -1,0 +1,110 @@
+{
+  "dark": {
+    "page": "#07101f",
+    "panel": "#0e1e33",
+    "panelEnd": "#0a1627",
+    "text": "#e9f2ff",
+    "muted": "#91a7c1",
+    "line": "#203754",
+    "header": "#102943",
+    "slot": "#10223a",
+    "field": "#081525",
+    "control": "#122844",
+    "controlHover": "#1b3854",
+    "focus": "#62ddff",
+    "selected": "#225b95",
+    "glowStart": "#102b44",
+    "glowEnd": "#21182e",
+    "x": "#465b73",
+    "top": {
+      "fg": "#ffd36a",
+      "surface": "#3d3828",
+      "border": "#9c8240",
+      "hover": "#51472e"
+    },
+    "s": {
+      "fg": "#71efbb",
+      "surface": "#163d39",
+      "border": "#4d8576",
+      "hover": "#204b44"
+    },
+    "aplus": {
+      "fg": "#b9a1ff",
+      "surface": "#2d2946",
+      "border": "#7b69ab",
+      "hover": "#393157"
+    },
+    "a": {
+      "fg": "#a8c9e8",
+      "surface": "#172b43",
+      "border": "#506b87",
+      "hover": "#223b55"
+    },
+    "percent": {
+      "fg": "#b9efff",
+      "surface": "#163346",
+      "border": "#4b788f",
+      "hover": "#204457"
+    },
+    "pvp": {
+      "fg": "#ffc1cc",
+      "surface": "#302437",
+      "border": "#976b81",
+      "hover": "#453047"
+    }
+  },
+  "light": {
+    "page": "#f1f5fb",
+    "panel": "#ffffff",
+    "panelEnd": "#f5f8fc",
+    "text": "#172a44",
+    "muted": "#52657c",
+    "line": "#c6d3e2",
+    "header": "#e3edf8",
+    "slot": "#edf3fa",
+    "field": "#ffffff",
+    "control": "#e3edf8",
+    "controlHover": "#d1e3f5",
+    "focus": "#136286",
+    "selected": "#225b95",
+    "glowStart": "#dceaf6",
+    "glowEnd": "#eee6f5",
+    "x": "#9aabbd",
+    "top": {
+      "fg": "#775111",
+      "surface": "#fff4d6",
+      "border": "#a27f2c",
+      "hover": "#ffedbd"
+    },
+    "s": {
+      "fg": "#175d47",
+      "surface": "#e0f4ed",
+      "border": "#568c7c",
+      "hover": "#cbece0"
+    },
+    "aplus": {
+      "fg": "#654093",
+      "surface": "#f0e9fb",
+      "border": "#9172b1",
+      "hover": "#e5d8f7"
+    },
+    "a": {
+      "fg": "#345c7d",
+      "surface": "#e7eff8",
+      "border": "#718da6",
+      "hover": "#d7e5f3"
+    },
+    "percent": {
+      "fg": "#22566c",
+      "surface": "#e1f2f8",
+      "border": "#598a9f",
+      "hover": "#cde7f2"
+    },
+    "pvp": {
+      "fg": "#873b56",
+      "surface": "#fae9ef",
+      "border": "#af778c",
+      "hover": "#f3d7e1"
+    }
+  }
+}
