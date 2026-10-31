@@ -351,6 +351,11 @@ export const GEAR_SLOTS: GearSlot[] = [
           tone: 'flat',
         },
         {
+          label: 'Endurance',
+          key: 'helmet|Endurance',
+          tone: 'flat',
+        },
+        {
           label: 'HP',
           key: 'helmet|HP',
           tone: 'flat',
