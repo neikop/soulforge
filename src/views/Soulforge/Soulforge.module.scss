@@ -169,9 +169,6 @@
     background: transparent;
     box-shadow: none;
   }
-  &[data-hide-x] td[data-tier='X'] {
-    color: transparent;
-  }
 }
 
 .pill {
@@ -192,7 +189,7 @@
   text-align: left;
   cursor: pointer;
 
-  @each $tone in top, s, aplus, pvp {
+  @each $tone in top, s, aplus, a, pvp {
     &[data-tone='#{$tone}'] {
       --pill-fg: var(--chakra-colors-matrix-#{$tone}-fg);
       --pill-bg: var(--chakra-colors-matrix-#{$tone}-surface);

@@ -1,4 +1,4 @@
-import type { BraceletEntry, GearSlot } from './types'
+import type { BraceletEntry, GearSlot, StatGroups, StatLine } from './types'
 
 export const MATRIX_COLUMNS = [
   'Weapon Damage Boost %',
@@ -13,6 +13,45 @@ export const MATRIX_COLUMNS = [
   'Front Attack',
   'Critical Attack',
 ] as const
+
+function accessoryLines(slotId: string, speedStat?: 'Combat Speed %' | 'Move Speed %'): StatGroups {
+  const flatLines = (stats: string[], category: StatLine['category']): StatLine[] =>
+    stats.map((stat) => ({
+      category,
+      isUnique: false,
+      key: `${slotId}|${stat}`,
+      label: stat.replace(/\bRegen$/, 'Regeneration'),
+      tone: 'a',
+    }))
+  const attack = flatLines(['Attack', 'Accuracy', 'Critical Hit', 'Might', 'Precision'], 'attack')
+  if (speedStat) {
+    attack.unshift({
+      category: 'attack',
+      isUnique: false,
+      key: `${slotId}|${speedStat}`,
+      label: speedStat,
+      tone: 's',
+    })
+  }
+  return [
+    [],
+    attack,
+    flatLines(['Defense', 'Block', 'HP', 'MP', 'Natural HP Regen', 'Natural MP Regen', 'Flight Power'], 'defense'),
+    [...flatLines(['Intelligence'], 'attack'), ...flatLines(['Critical Hit Resist', 'Evasion'], 'defense')],
+  ]
+}
+
+function ringLines(slotId: string): StatGroups {
+  const lines = accessoryLines(slotId)
+  lines[0] = ['Overhead Slam +1', 'Rending Blow +1', 'Ruinous Blow +1'].map((label) => ({
+    category: 'attack',
+    isUnique: false,
+    key: `${slotId}|${label}`,
+    label,
+    tone: 'top',
+  }))
+  return lines
+}
 
 export const GEAR_SLOTS: GearSlot[] = [
   {
@@ -1072,7 +1111,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
       {
-        tier: 'S+',
+        tier: 'S',
         isUnique: false,
       },
       {
@@ -1088,20 +1127,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    lines: [
-      [
-        {
-          label: 'Move Speed %',
-          key: 'earring-1|Move Speed %',
-          tone: 'top',
-          isUnique: false,
-          category: 'attack',
-        },
-      ],
-      [],
-      [],
-      [],
-    ],
+    lines: accessoryLines('earring-1', 'Move Speed %'),
   },
   {
     id: 'earring-2',
@@ -1138,7 +1164,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
       {
-        tier: 'S+',
+        tier: 'S',
         isUnique: false,
       },
       {
@@ -1154,20 +1180,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    lines: [
-      [
-        {
-          label: 'Move Speed %',
-          key: 'earring-2|Move Speed %',
-          tone: 'top',
-          isUnique: false,
-          category: 'attack',
-        },
-      ],
-      [],
-      [],
-      [],
-    ],
+    lines: accessoryLines('earring-2', 'Move Speed %'),
   },
   {
     id: 'necklace',
@@ -1180,7 +1193,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
       {
-        tier: 'S+',
+        tier: 'S',
         isUnique: false,
       },
       {
@@ -1220,20 +1233,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    lines: [
-      [
-        {
-          label: 'Combat Speed %',
-          key: 'necklace|Combat Speed %',
-          tone: 'top',
-          isUnique: false,
-          category: 'attack',
-        },
-      ],
-      [],
-      [],
-      [],
-    ],
+    lines: accessoryLines('necklace', 'Combat Speed %'),
   },
   {
     id: 'amulet',
@@ -1339,7 +1339,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    lines: [[], [], [], []],
+    lines: ringLines('ring-1'),
   },
   {
     id: 'ring-2',
@@ -1392,7 +1392,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    lines: [[], [], [], []],
+    lines: ringLines('ring-2'),
   },
   {
     id: 'bracelet',

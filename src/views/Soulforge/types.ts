@@ -1,12 +1,12 @@
 export type MatrixTier = 'A' | 'A+' | 'S' | 'S+' | 'X'
-export type StatTone = 'aplus' | 'pvp' | 's' | 'top'
+export type StatTone = 'a' | 'aplus' | 'pvp' | 's' | 'top'
 export type TabId = 'basic' | 'bracelet' | 'dps'
 
 export type StatLine = {
   category: 'attack' | 'defense'
   isUnique: boolean
   key: string
-  label: `${string} %`
+  label: string
   tone: StatTone
 }
 

@@ -19,7 +19,6 @@ const TABS: { id: TabId; label: string }[] = [
 export default function Soulforge() {
   const { activeTab, ownedLines, setActiveTab, toggleOwned } = useProgress()
   const [query, setQuery] = useState('')
-  const [hasHiddenX, setHasHiddenX] = useState(false)
   const normalizedQuery = query.trim().toLowerCase()
   const slots = GEAR_SLOTS.filter((slot) => {
     if (!normalizedQuery) return true
@@ -32,7 +31,6 @@ export default function Soulforge() {
 
   function handleReset() {
     setQuery('')
-    setHasHiddenX(false)
   }
 
   return (
@@ -53,19 +51,6 @@ export default function Soulforge() {
             type="search"
             value={query}
           />
-          {activeTab === 'dps' && (
-            <Button
-              aria-pressed={hasHiddenX}
-              className={styles.control}
-              onClick={() => setHasHiddenX((value) => !value)}
-              textStyle="matrixAction"
-              title="X: slot này không roll được chỉ số đó. Bấm để ẩn dấu X và giữ nguyên cột."
-              type="button"
-              unstyled
-            >
-              {hasHiddenX ? 'Hiện dấu X' : 'Ẩn dấu X'}
-            </Button>
-          )}
           <Button className={styles.control} onClick={handleReset} textStyle="matrixAction" type="button" unstyled>
             Đặt lại
           </Button>
@@ -96,7 +81,7 @@ export default function Soulforge() {
           <Heading as="h1" mb="16px" textStyle="matrixHeading">
             {TABS.find((tab) => tab.id === activeTab)?.label}
           </Heading>
-          {activeTab === 'dps' && <DpsMatrix hasHiddenX={hasHiddenX} slots={slots} />}
+          {activeTab === 'dps' && <DpsMatrix slots={slots} />}
           {activeTab === 'basic' && <GearList onToggle={toggleOwned} ownedLines={ownedLines} slots={slots} />}
           {activeTab === 'bracelet' && <BraceletList />}
         </Box>

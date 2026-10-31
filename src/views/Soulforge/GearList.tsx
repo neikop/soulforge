@@ -58,14 +58,14 @@ export function GearList({ slots, ownedLines, onToggle }: GearListProps) {
               </Text>
             )}
           </Flex>
-          {slot.lines.some((group) => group.length) && (
-            <SimpleGrid columnGap="12px" columns={2} p="14px" rowGap="6px">
-              {STAT_COLUMNS.map((column) => (
-                <Text color="matrix.muted" key={column.category} textStyle="matrixNote">
-                  {column.label}
-                </Text>
-              ))}
-              {STAT_GROUPS.flatMap(({ tier, index }) =>
+          <SimpleGrid columnGap="12px" columns={2} p="14px" rowGap="6px">
+            {STAT_COLUMNS.map((column) => (
+              <Text color="matrix.muted" key={column.category} textStyle="matrixNote">
+                {column.label}
+              </Text>
+            ))}
+            {(slot.lines.some((group) => group.length) ? STAT_GROUPS : STAT_GROUPS.slice(0, 1)).flatMap(
+              ({ tier, index }) =>
                 STAT_COLUMNS.map((column) => (
                   <Flex
                     align="start"
@@ -92,9 +92,8 @@ export function GearList({ slots, ownedLines, onToggle }: GearListProps) {
                       ))}
                   </Flex>
                 )),
-              )}
-            </SimpleGrid>
-          )}
+            )}
+          </SimpleGrid>
         </Box>
       ))}
     </SimpleGrid>

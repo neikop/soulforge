@@ -5,13 +5,12 @@ import type { GearSlot } from './types'
 import { MATRIX_COLUMNS } from './data'
 import styles from './Soulforge.module.scss'
 
-export function DpsMatrix({ slots, hasHiddenX }: { hasHiddenX: boolean; slots: GearSlot[] }) {
+export function DpsMatrix({ slots }: { slots: GearSlot[] }) {
   return (
     <Box className={styles.tableWrap}>
       <Table.Root
         aria-label="DPS Soul Binding theo slot"
         className={`${styles.table} ${styles.matrixTable}`}
-        data-hide-x={hasHiddenX || undefined}
         id="dpsTable"
         unstyled
       >
@@ -46,9 +45,11 @@ export function DpsMatrix({ slots, hasHiddenX }: { hasHiddenX: boolean; slots: G
               </td>
               {slot.matrix.map((cell, index) => (
                 <td data-tier={cell.tier ?? undefined} key={MATRIX_COLUMNS[index]}>
-                  <Text as="span" textStyle="matrixTier">
-                    {cell.tier}
-                  </Text>
+                  {cell.tier !== 'X' && (
+                    <Text as="span" textStyle="matrixTier">
+                      {cell.tier}
+                    </Text>
+                  )}
                   {cell.isUnique && (
                     <Text color="matrix.top.fg" textStyle="matrixHeader">
                       Unique
