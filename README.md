@@ -10,7 +10,7 @@ Bảng Soul Binding cho Gladiator trong AION 2, viết bằng React và TypeScri
 
 ## Chạy local
 
-Yêu cầu Node.js >= 20.19 và pnpm 8.9.2 (được khai báo trong packageManager).
+Yêu cầu Node.js 22.x và pnpm 8.9.2 (được khai báo trong packageManager).
 
 ```sh
 pnpm install
@@ -31,6 +31,8 @@ pnpm check chạy format, lint, contrast, TypeScript và production build. Hook 
 ## Deploy trên Vercel
 
 Project Vercel dùng Git integration với repo [neikop/soulforge](https://github.com/neikop/soulforge). Cấu hình production branch là `main`: mỗi lần push lên `main`, Vercel tự build và deploy Production; các branch/PR đủ điều kiện tạo Preview.
+
+Production: [soulforge-eta.vercel.app](https://soulforge-eta.vercel.app). Project `soulforge` thuộc team `neikops-projects`, dùng Node.js 22.x giống môi trường local đã kiểm tra.
 
 `vercel.json` cố định pnpm 8.9.2, build bằng `pnpm run build` và xuất `dist`. SPA fallback hỗ trợ truy cập trực tiếp hoặc tải lại `/components`, đồng thời giữ riêng request assets và API. Ứng dụng hiện không cần biến môi trường để dùng matrix và checklist.
 
