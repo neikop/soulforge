@@ -1,9 +1,20 @@
-import { Box, Flex, Stack, Table, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, SimpleGrid, Text } from '@chakra-ui/react'
 
 import type { GearSlot, OwnedLines } from './types'
 
-import styles from './Soulforge.module.scss'
 import { StatPill } from './StatPill'
+
+const STAT_GROUPS = [
+  { index: 0, tier: 'S+' },
+  { index: 1, tier: 'S' },
+  { index: 2, tier: 'A+' },
+  { index: 3, tier: 'PVP' },
+] as const
+
+const STAT_COLUMNS = [
+  { category: 'attack', label: 'Tấn công' },
+  { category: 'defense', label: 'Phòng thủ' },
+] as const
 
 type GearListProps = {
   onToggle: (key: string) => void
@@ -13,75 +24,79 @@ type GearListProps = {
 
 export function GearList({ slots, ownedLines, onToggle }: GearListProps) {
   return (
-    <Box className={styles.tableWrap}>
-      <Table.Root
-        aria-label="Danh sách đồ và tiến độ sở hữu"
-        className={`${styles.table} ${styles.gearTable}`}
-        id="gearList"
-        unstyled
-      >
-        <colgroup>
-          <col />
-          <col />
-          <col />
-          <col />
-        </colgroup>
-        <thead>
-          <tr>
-            {['Đồ / slot', 'Dòng nên lấy PVE', 'Dòng nên lấy PVP', 'Dòng độc quyền'].map((label) => (
-              <th key={label} scope="col">
-                <Text textStyle="matrixHeader">{label}</Text>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {slots.map((slot) => (
-            <tr key={slot.id}>
-              <td>
-                <Text textStyle="matrixSlot">{slot.label}</Text>
-                {slot.note && (
-                  <Text color="matrix.muted" textStyle="matrixNote">
-                    {slot.note}
-                  </Text>
-                )}
-              </td>
-              {(['pve', 'pvp'] as const).map((mode) => (
-                <td className={mode === 'pvp' && slot.pvp.length ? styles.pvpCell : undefined} key={mode}>
-                  <Stack align="start" gap="6px">
-                    {slot[mode].map((group) => (
-                      <Flex flexWrap="wrap" gap="6px" key={group.map((line) => line.key).join(',')}>
-                        {group.map((line) => (
-                          <StatPill
-                            isOwned={ownedLines[line.key] === true}
-                            key={line.key}
-                            line={line}
-                            onToggle={onToggle}
-                            slot={slot.label}
-                          />
-                        ))}
-                      </Flex>
-                    ))}
-                  </Stack>
-                </td>
+    <SimpleGrid aria-label="Danh sách đồ và tiến độ sở hữu" columns={{ base: 1, lg: 2 }} gap="16px" id="gearList">
+      {slots.map((slot) => (
+        <Box
+          aria-labelledby={`gear-${slot.id}`}
+          as="article"
+          bg="matrix.field"
+          borderColor="matrix.line"
+          borderRadius="12px"
+          borderWidth="1px"
+          data-slot={slot.id}
+          key={slot.id}
+          minW="0"
+        >
+          <Flex
+            align="center"
+            as="header"
+            bg="matrix.slot"
+            borderBottomColor="matrix.line"
+            borderBottomWidth="1px"
+            borderTopRadius="12px"
+            gap="12px"
+            justify="space-between"
+            px="14px"
+            py="10px"
+          >
+            <Heading as="h2" id={`gear-${slot.id}`} textStyle="matrixSlot">
+              {slot.label}
+            </Heading>
+            {slot.note && (
+              <Text color="matrix.muted" textStyle="matrixNote">
+                {slot.note}
+              </Text>
+            )}
+          </Flex>
+          {slot.lines.some((group) => group.length) && (
+            <SimpleGrid columnGap="12px" columns={2} p="14px" rowGap="6px">
+              {STAT_COLUMNS.map((column) => (
+                <Text color="matrix.muted" key={column.category} textStyle="matrixNote">
+                  {column.label}
+                </Text>
               ))}
-              <td>
-                <Flex flexWrap="wrap" gap="6px">
-                  {slot.exclusive.map((line) => (
-                    <StatPill
-                      isOwned={ownedLines[line.key] === true}
-                      key={line.key}
-                      line={line}
-                      onToggle={onToggle}
-                      slot={slot.label}
-                    />
-                  ))}
-                </Flex>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table.Root>
-    </Box>
+              {STAT_GROUPS.flatMap(({ tier, index }) =>
+                STAT_COLUMNS.map((column) => (
+                  <Flex
+                    align="start"
+                    alignContent="start"
+                    aria-label={`${column.label} · ${tier}`}
+                    data-category={column.category}
+                    data-tier={tier}
+                    flexWrap="wrap"
+                    gap="6px"
+                    key={`${tier}-${column.category}`}
+                    minH="24px"
+                    minW="0"
+                  >
+                    {slot.lines[index]
+                      .filter((line) => line.category === column.category)
+                      .map((line) => (
+                        <StatPill
+                          isOwned={ownedLines[line.key] === true}
+                          key={line.key}
+                          line={line}
+                          onToggle={onToggle}
+                          slot={slot.label}
+                        />
+                      ))}
+                  </Flex>
+                )),
+              )}
+            </SimpleGrid>
+          )}
+        </Box>
+      ))}
+    </SimpleGrid>
   )
 }

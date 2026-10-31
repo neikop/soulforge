@@ -14,12 +14,13 @@ type StatPillProps = {
 export function StatPill({ line, slot, isOwned, onToggle }: StatPillProps) {
   return (
     <Button
-      aria-label={`${slot} · ${line.label} · ${isOwned ? 'Đã sở hữu' : 'Chưa sở hữu'}`}
+      aria-label={`${slot} · ${line.label}${line.isUnique ? ' · Unique' : ''} · ${isOwned ? 'Đã sở hữu' : 'Chưa sở hữu'}`}
       aria-pressed={isOwned}
       className={styles.pill}
       data-owned-key={line.key}
       data-stat={line.label}
       data-tone={line.tone}
+      data-unique={line.isUnique || undefined}
       onClick={() => onToggle(line.key)}
       textStyle="matrixPill"
       title={isOwned ? 'Đã sở hữu · Bấm để bỏ dấu tích' : 'Chưa sở hữu · Bấm để đánh dấu'}
@@ -27,6 +28,11 @@ export function StatPill({ line, slot, isOwned, onToggle }: StatPillProps) {
       unstyled
     >
       {line.label}
+      {line.isUnique && (
+        <Box as="span" color="warning.fg" flexShrink="0" fontWeight="mid">
+          Unique
+        </Box>
+      )}
       {isOwned && (
         <Box aria-hidden="true" as="span" className={styles.check} color="matrix.s.fg">
           ✓

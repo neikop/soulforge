@@ -13,6 +13,16 @@ const matrixPalette = JSON.parse(
   await readFile(new URL('../src/components/theme/matrix-palette.json', import.meta.url), 'utf8'),
 )
 for (const [mode, palette] of Object.entries(matrixPalette)) {
+  for (const background of ['surface', 'hover']) {
+    checks.push({
+      foreground: token(
+        `colors.${families.warning.palette}.${mode === 'dark' ? familyShades.fgDark : familyShades.fgLight}`,
+      ),
+      background: palette.top[background],
+      label: `Unique / matrix.top.${background} (${mode})`,
+      minimum: MIN_TEXT_CONTRAST,
+    })
+  }
   for (const name of ['top', 's', 'aplus', 'a', 'percent', 'pvp']) {
     const tone = palette[name]
     for (const background of ['surface', 'hover']) {

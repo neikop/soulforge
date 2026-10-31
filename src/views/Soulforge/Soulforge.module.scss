@@ -174,27 +174,6 @@
   }
 }
 
-.gearTable {
-  min-width: 1180px;
-  col:nth-child(1) {
-    width: 150px;
-  }
-  col:nth-child(2),
-  col:nth-child(3) {
-    width: 390px;
-  }
-  col:nth-child(4) {
-    width: 190px;
-  }
-  td {
-    text-align: left;
-    vertical-align: top;
-  }
-  .pvpCell {
-    background: var(--chakra-colors-matrix-pvp-surface);
-  }
-}
-
 .pill {
   --pill-fg: var(--chakra-colors-matrix-a-fg);
   --pill-bg: var(--chakra-colors-matrix-a-surface);
@@ -202,28 +181,24 @@
   --pill-hover: var(--chakra-colors-matrix-a-hover);
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   gap: 5px;
   padding: 4px 7px;
   border-radius: 7px;
   border: 1px solid var(--pill-border);
   color: var(--pill-fg);
   background: var(--pill-bg);
-  white-space: nowrap;
+  white-space: normal;
+  text-align: left;
   cursor: pointer;
 
-  @each $tone in top, s, aplus, percent, pvp {
+  @each $tone in top, s, aplus, pvp {
     &[data-tone='#{$tone}'] {
       --pill-fg: var(--chakra-colors-matrix-#{$tone}-fg);
       --pill-bg: var(--chakra-colors-matrix-#{$tone}-surface);
       --pill-border: var(--chakra-colors-matrix-#{$tone}-border);
       --pill-hover: var(--chakra-colors-matrix-#{$tone}-hover);
     }
-  }
-  &[data-tone='unique'] {
-    --pill-fg: var(--chakra-colors-matrix-top-fg);
-    --pill-bg: var(--chakra-colors-matrix-top-surface);
-    --pill-border: var(--chakra-colors-matrix-top-border);
-    --pill-hover: var(--chakra-colors-matrix-top-hover);
   }
   &:hover,
   &:active {

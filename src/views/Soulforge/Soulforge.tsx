@@ -26,7 +26,7 @@ export default function Soulforge() {
     const labels =
       activeTab === 'dps'
         ? slot.matrix.flatMap((cell, index) => (cell.tier && cell.tier !== 'X' ? [MATRIX_COLUMNS[index]] : []))
-        : [...slot.pve.flat(), ...slot.pvp.flat(), ...slot.exclusive].map((line) => line.label)
+        : slot.lines.flat().map((line) => line.label)
     return `${slot.search} ${slot.label} ${slot.note} ${labels.join(' ')}`.toLowerCase().includes(normalizedQuery)
   })
 

@@ -66,79 +66,50 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Weapon Damage Boost %',
           key: 'greatsword|Weapon Damage Boost %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
         {
           label: 'Combat Speed %',
           key: 'greatsword|Combat Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
         {
           label: 'Damage Boost %',
           key: 'greatsword|Damage Boost %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
           label: 'Multi-hit Chance %',
           key: 'greatsword|Multi-hit Chance %',
-          tone: 'aplus',
+          tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
       ],
-      [
-        {
-          label: 'Might',
-          key: 'greatsword|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'greatsword|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Attack',
-          key: 'greatsword|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'greatsword|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'greatsword|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Front Attack',
-          key: 'greatsword|Front Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Attack',
-          key: 'greatsword|Critical Attack',
-          tone: 'flat',
-        },
-      ],
-    ],
-    pvp: [
+      [],
       [
         {
           label: 'Status Effect Chance %',
           key: 'greatsword|Status Effect Chance %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'attack',
         },
       ],
     ],
-    exclusive: [],
   },
   {
     id: 'guard',
@@ -191,79 +162,50 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Weapon Damage Boost %',
           key: 'guard|Weapon Damage Boost %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
         {
           label: 'Combat Speed %',
           key: 'guard|Combat Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
         {
           label: 'Damage Boost %',
           key: 'guard|Damage Boost %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
           label: 'Multi-hit Chance %',
           key: 'guard|Multi-hit Chance %',
-          tone: 'aplus',
+          tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
       ],
-      [
-        {
-          label: 'Might',
-          key: 'guard|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'guard|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Attack',
-          key: 'guard|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'guard|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'guard|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Front Attack',
-          key: 'guard|Front Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Attack',
-          key: 'guard|Critical Attack',
-          tone: 'flat',
-        },
-      ],
-    ],
-    pvp: [
+      [],
       [
         {
           label: 'Status Effect Chance %',
           key: 'guard|Status Effect Chance %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'attack',
         },
       ],
     ],
-    exclusive: [],
   },
   {
     id: 'helmet',
@@ -316,86 +258,64 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
+      [
+        {
+          label: 'Incoming Heal %',
+          key: 'helmet|Incoming Heal %',
+          tone: 'top',
+          isUnique: true,
+          category: 'defense',
+        },
+      ],
       [
         {
           label: 'Double Chance %',
           key: 'helmet|Double Chance %',
           tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
         {
           label: 'Attack Increase %',
           key: 'helmet|Attack Increase %',
           tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Attack',
-          key: 'helmet|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'helmet|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'helmet|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Block',
-          key: 'helmet|Block',
-          tone: 'flat',
-        },
-        {
-          label: 'Endurance',
-          key: 'helmet|Endurance',
-          tone: 'flat',
-        },
-        {
-          label: 'HP',
-          key: 'helmet|HP',
-          tone: 'flat',
+          label: 'Endurance %',
+          key: 'helmet|Endurance %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'helmet|Status Effect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
-      ],
-      [
         {
           label: 'Perfect Resist %',
           key: 'helmet|Perfect Resist %',
           tone: 'pvp',
-        },
-      ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'helmet|Critical Hit Resist',
-          tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Evasion',
-          key: 'helmet|Evasion',
+          label: 'Weapon Damage Tolerance %',
+          key: 'helmet|Weapon Damage Tolerance %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    exclusive: [
-      {
-        label: 'Incoming Heal %',
-        key: 'helmet|Incoming Heal %',
-        tone: 'unique',
-      },
     ],
   },
   {
@@ -449,12 +369,14 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Critical Damage Boost %',
           key: 'pauldrons|Critical Damage Boost %',
-          tone: 'unique',
+          tone: 'top',
+          isUnique: true,
+          category: 'attack',
         },
       ],
       [
@@ -462,65 +384,49 @@ export const GEAR_SLOTS: GearSlot[] = [
           label: 'Double Chance %',
           key: 'pauldrons|Double Chance %',
           tone: 's',
-        },
-        {
-          label: 'Defense Increase %',
-          key: 'pauldrons|Defense Increase %',
-          tone: 'percent',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Attack',
-          key: 'pauldrons|Attack',
-          tone: 'flat',
+          label: 'Defense Increase %',
+          key: 'pauldrons|Defense Increase %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Accuracy',
-          key: 'pauldrons|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'pauldrons|Critical Hit',
-          tone: 'flat',
+          label: 'Regeneration %',
+          key: 'pauldrons|Regeneration %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'pauldrons|Status Effect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
-      ],
-      [
+        {
+          label: 'Endurance Penetration %',
+          key: 'pauldrons|Endurance Penetration %',
+          tone: 'pvp',
+          isUnique: false,
+          category: 'attack',
+        },
         {
           label: 'Perfect Resist %',
           key: 'pauldrons|Perfect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'pauldrons|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'pauldrons|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [
-      {
-        label: 'Critical Damage Boost %',
-        key: 'pauldrons|Critical Damage Boost %',
-        tone: 'unique',
-      },
     ],
   },
   {
@@ -574,12 +480,14 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Damage Boost %',
           key: 'chest|Damage Boost %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
@@ -587,65 +495,50 @@ export const GEAR_SLOTS: GearSlot[] = [
           label: 'Perfect Chance %',
           key: 'chest|Perfect Chance %',
           tone: 's',
-        },
-        {
-          label: 'Defense Increase %',
-          key: 'chest|Defense Increase %',
-          tone: 'percent',
-        },
-        {
-          label: 'Regeneration %',
-          key: 'chest|Regeneration %',
-          tone: 'percent',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Attack',
-          key: 'chest|Attack',
-          tone: 'flat',
+          label: 'Defense Increase %',
+          key: 'chest|Defense Increase %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Accuracy',
-          key: 'chest|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'chest|Critical Hit',
-          tone: 'flat',
+          label: 'Regeneration %',
+          key: 'chest|Regeneration %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'chest|Status Effect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
-      ],
-      [
         {
           label: 'Double Resist %',
           key: 'chest|Double Resist %',
           tone: 'pvp',
-        },
-      ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'chest|Critical Hit Resist',
-          tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Evasion',
-          key: 'chest|Evasion',
+          label: 'Weapon Damage Tolerance %',
+          key: 'chest|Weapon Damage Tolerance %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
     ],
-    exclusive: [],
   },
   {
     id: 'belt',
@@ -698,9 +591,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [],
-    pvp: [],
-    exclusive: [],
+    lines: [[], [], [], []],
   },
   {
     id: 'legs',
@@ -753,88 +644,64 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
+      [
+        {
+          label: 'Damage Tolerance %',
+          key: 'legs|Damage Tolerance %',
+          tone: 'top',
+          isUnique: true,
+          category: 'defense',
+        },
+      ],
       [
         {
           label: 'Attack Increase %',
           key: 'legs|Attack Increase %',
           tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
-      ],
-      [
         {
           label: 'Perfect Chance %',
           key: 'legs|Perfect Chance %',
           tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Attack',
-          key: 'legs|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'legs|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'legs|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Block',
-          key: 'legs|Block',
-          tone: 'flat',
-        },
-        {
-          label: 'HP',
-          key: 'legs|HP',
-          tone: 'flat',
+          label: 'Endurance %',
+          key: 'legs|Endurance %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'legs|Status Effect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
-      ],
-      [
         {
           label: 'Double Resist %',
           key: 'legs|Double Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
         {
           label: 'Multi-hit Resist %',
           key: 'legs|Multi-hit Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'legs|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'legs|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [
-      {
-        label: 'Damage Tolerance %',
-        key: 'legs|Damage Tolerance %',
-        tone: 'unique',
-      },
     ],
   },
   {
@@ -888,12 +755,14 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Combat Speed %',
           key: 'gloves|Combat Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
@@ -901,65 +770,50 @@ export const GEAR_SLOTS: GearSlot[] = [
           label: 'Perfect Chance %',
           key: 'gloves|Perfect Chance %',
           tone: 's',
-        },
-        {
-          label: 'Endurance Penetration %',
-          key: 'gloves|Endurance Penetration %',
-          tone: 'percent',
-        },
-        {
-          label: 'Regeneration %',
-          key: 'gloves|Regeneration %',
-          tone: 'percent',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Attack',
-          key: 'gloves|Attack',
-          tone: 'flat',
+          label: 'Defense Increase %',
+          key: 'gloves|Defense Increase %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Accuracy',
-          key: 'gloves|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'gloves|Critical Hit',
-          tone: 'flat',
+          label: 'Regeneration %',
+          key: 'gloves|Regeneration %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'gloves|Status Effect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
-      ],
-      [
+        {
+          label: 'Endurance Penetration %',
+          key: 'gloves|Endurance Penetration %',
+          tone: 'pvp',
+          isUnique: false,
+          category: 'attack',
+        },
         {
           label: 'Multi-hit Resist %',
           key: 'gloves|Multi-hit Resist %',
           tone: 'pvp',
-        },
-      ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'gloves|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'gloves|Evasion',
-          tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
     ],
-    exclusive: [],
   },
   {
     id: 'cloak',
@@ -1012,81 +866,64 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
+      [
+        {
+          label: 'Critical Damage Tolerance %',
+          key: 'cloak|Critical Damage Tolerance %',
+          tone: 'top',
+          isUnique: true,
+          category: 'defense',
+        },
+      ],
       [
         {
           label: 'Double Chance %',
           key: 'cloak|Double Chance %',
           tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
         {
           label: 'Attack Increase %',
           key: 'cloak|Attack Increase %',
           tone: 's',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Endurance Penetration %',
-          key: 'cloak|Endurance Penetration %',
-          tone: 'percent',
-        },
-        {
-          label: 'Weapon Damage Tolerance %',
-          key: 'cloak|Weapon Damage Tolerance %',
-          tone: 'percent',
+          label: 'Endurance %',
+          key: 'cloak|Endurance %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-      [
-        {
-          label: 'Attack',
-          key: 'cloak|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'cloak|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'cloak|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Damage Defense',
-          key: 'cloak|Critical Damage Defense',
-          tone: 'flat',
-        },
-      ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'cloak|Status Effect Resist %',
           tone: 'pvp',
-        },
-      ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'cloak|Critical Hit Resist',
-          tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Evasion',
-          key: 'cloak|Evasion',
+          label: 'Endurance Penetration %',
+          key: 'cloak|Endurance Penetration %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'attack',
+        },
+        {
+          label: 'Weapon Damage Tolerance %',
+          key: 'cloak|Weapon Damage Tolerance %',
+          tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    exclusive: [
-      {
-        label: 'Critical Damage Tolerance %',
-        key: 'cloak|Critical Damage Tolerance %',
-        tone: 'unique',
-      },
     ],
   },
   {
@@ -1140,12 +977,14 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Move Speed %',
           key: 'shoes|Move Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
@@ -1153,65 +992,50 @@ export const GEAR_SLOTS: GearSlot[] = [
           label: 'Perfect Chance %',
           key: 'shoes|Perfect Chance %',
           tone: 's',
-        },
-        {
-          label: 'Endurance Penetration %',
-          key: 'shoes|Endurance Penetration %',
-          tone: 'percent',
-        },
-        {
-          label: 'Regeneration %',
-          key: 'shoes|Regeneration %',
-          tone: 'percent',
+          isUnique: false,
+          category: 'attack',
         },
       ],
       [
         {
-          label: 'Attack',
-          key: 'shoes|Attack',
-          tone: 'flat',
+          label: 'Defense Increase %',
+          key: 'shoes|Defense Increase %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
         {
-          label: 'Accuracy',
-          key: 'shoes|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'shoes|Critical Hit',
-          tone: 'flat',
+          label: 'Regeneration %',
+          key: 'shoes|Regeneration %',
+          tone: 'aplus',
+          isUnique: false,
+          category: 'defense',
         },
       ],
-    ],
-    pvp: [
       [
         {
           label: 'Status Effect Resist %',
           key: 'shoes|Status Effect Resist %',
           tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
-      ],
-      [
+        {
+          label: 'Endurance Penetration %',
+          key: 'shoes|Endurance Penetration %',
+          tone: 'pvp',
+          isUnique: false,
+          category: 'attack',
+        },
         {
           label: 'Perfect Resist %',
           key: 'shoes|Perfect Resist %',
           tone: 'pvp',
-        },
-      ],
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'shoes|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'shoes|Evasion',
-          tone: 'pvp',
+          isUnique: false,
+          category: 'defense',
         },
       ],
     ],
-    exclusive: [],
   },
   {
     id: 'earring-1',
@@ -1264,62 +1088,20 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Move Speed %',
           key: 'earring-1|Move Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
-      [
-        {
-          label: 'Might',
-          key: 'earring-1|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'earring-1|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Attack',
-          key: 'earring-1|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'earring-1|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'earring-1|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Flight Power',
-          key: 'earring-1|Flight Power',
-          tone: 'flat',
-        },
-      ],
+      [],
+      [],
+      [],
     ],
-    pvp: [
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'earring-1|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'earring-1|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [],
   },
   {
     id: 'earring-2',
@@ -1372,62 +1154,20 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Move Speed %',
           key: 'earring-2|Move Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
-      [
-        {
-          label: 'Might',
-          key: 'earring-2|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'earring-2|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Attack',
-          key: 'earring-2|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'earring-2|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'earring-2|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Flight Power',
-          key: 'earring-2|Flight Power',
-          tone: 'flat',
-        },
-      ],
+      [],
+      [],
+      [],
     ],
-    pvp: [
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'earring-2|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'earring-2|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [],
   },
   {
     id: 'necklace',
@@ -1480,62 +1220,20 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
+    lines: [
       [
         {
           label: 'Combat Speed %',
           key: 'necklace|Combat Speed %',
           tone: 'top',
+          isUnique: false,
+          category: 'attack',
         },
       ],
-      [
-        {
-          label: 'Might',
-          key: 'necklace|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'necklace|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Attack',
-          key: 'necklace|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'necklace|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'necklace|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Flight Power',
-          key: 'necklace|Flight Power',
-          tone: 'flat',
-        },
-      ],
+      [],
+      [],
+      [],
     ],
-    pvp: [
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'necklace|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'necklace|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [],
   },
   {
     id: 'amulet',
@@ -1588,9 +1286,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [],
-    pvp: [],
-    exclusive: [],
+    lines: [[], [], [], []],
   },
   {
     id: 'ring-1',
@@ -1643,55 +1339,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
-      [
-        {
-          label: 'Attack',
-          key: 'ring-1|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'ring-1|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'ring-1|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Might',
-          key: 'ring-1|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'ring-1|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Flight Power',
-          key: 'ring-1|Flight Power',
-          tone: 'flat',
-        },
-      ],
-    ],
-    pvp: [
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'ring-1|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'ring-1|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [],
+    lines: [[], [], [], []],
   },
   {
     id: 'ring-2',
@@ -1744,55 +1392,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
-      [
-        {
-          label: 'Attack',
-          key: 'ring-2|Attack',
-          tone: 'flat',
-        },
-        {
-          label: 'Accuracy',
-          key: 'ring-2|Accuracy',
-          tone: 'flat',
-        },
-        {
-          label: 'Critical Hit',
-          key: 'ring-2|Critical Hit',
-          tone: 'flat',
-        },
-        {
-          label: 'Might',
-          key: 'ring-2|Might',
-          tone: 'flat',
-        },
-        {
-          label: 'Precision',
-          key: 'ring-2|Precision',
-          tone: 'flat',
-        },
-        {
-          label: 'Flight Power',
-          key: 'ring-2|Flight Power',
-          tone: 'flat',
-        },
-      ],
-    ],
-    pvp: [
-      [
-        {
-          label: 'Critical Hit Resist',
-          key: 'ring-2|Critical Hit Resist',
-          tone: 'pvp',
-        },
-        {
-          label: 'Evasion',
-          key: 'ring-2|Evasion',
-          tone: 'pvp',
-        },
-      ],
-    ],
-    exclusive: [],
+    lines: [[], [], [], []],
   },
   {
     id: 'bracelet',
@@ -1845,83 +1445,7 @@ export const GEAR_SLOTS: GearSlot[] = [
         isUnique: false,
       },
     ],
-    pve: [
-      [
-        {
-          label: 'Destruction',
-          key: 'bracelet|Destruction',
-          tone: 'unique',
-        },
-        {
-          label: 'Wisdom',
-          key: 'bracelet|Wisdom',
-          tone: 'unique',
-        },
-        {
-          label: 'Illusion',
-          key: 'bracelet|Illusion',
-          tone: 'unique',
-        },
-        {
-          label: 'Time',
-          key: 'bracelet|Time',
-          tone: 'unique',
-        },
-      ],
-    ],
-    pvp: [],
-    exclusive: [
-      {
-        label: 'Destruction',
-        key: 'bracelet|Destruction',
-        tone: 'unique',
-      },
-      {
-        label: 'Wisdom',
-        key: 'bracelet|Wisdom',
-        tone: 'unique',
-      },
-      {
-        label: 'Illusion',
-        key: 'bracelet|Illusion',
-        tone: 'unique',
-      },
-      {
-        label: 'Time',
-        key: 'bracelet|Time',
-        tone: 'unique',
-      },
-      {
-        label: 'Justice',
-        key: 'bracelet|Justice',
-        tone: 'unique',
-      },
-      {
-        label: 'Freedom',
-        key: 'bracelet|Freedom',
-        tone: 'unique',
-      },
-      {
-        label: 'Death',
-        key: 'bracelet|Death',
-        tone: 'unique',
-      },
-      {
-        label: 'Destiny',
-        key: 'bracelet|Destiny',
-        tone: 'unique',
-      },
-      {
-        label: 'Life',
-        key: 'bracelet|Life',
-        tone: 'unique',
-      },
-      {
-        label: 'Space',
-        key: 'bracelet|Space',
-        tone: 'unique',
-      },
-    ],
+    lines: [[], [], [], []],
   },
 ]
 

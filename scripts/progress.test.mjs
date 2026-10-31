@@ -32,3 +32,22 @@ test('invalid browser data cannot become checklist state', () => {
   for (const value of [null, undefined, 'sources', 'basic ']) assert.equal(isTabId(value), false)
   for (const value of ['dps', 'basic', 'bracelet']) assert.equal(isTabId(value), true)
 })
+
+test('correcting Endurance to a percentage preserves ticks and respects an explicit new value', () => {
+  const owned = parseOwnedLines(
+    JSON.stringify({
+      'helmet|Endurance': true,
+      'legs|Endurance': true,
+      'cloak|Endurance': true,
+      'cloak|Endurance %': false,
+      'ring-1|Attack': true,
+    }),
+  )
+  assert.deepEqual(owned, {
+    'helmet|Endurance %': true,
+    'legs|Endurance %': true,
+    'cloak|Endurance %': false,
+    'ring-1|Attack': true,
+  })
+  assert.deepEqual(parseOwnedLines(JSON.stringify(owned)), owned)
+})

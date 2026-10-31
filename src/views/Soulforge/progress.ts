@@ -19,6 +19,7 @@ export function parseOwnedLines(value: null | string): OwnedLines {
         .replace(/^earrings\|/, 'earring-1|')
         .replace(/^rings\|/, 'ring-1|')
         .replace(/\b(Attack|Defense) increase\b/g, '$1 Increase')
+        .replace(/^(helmet|legs|cloak)\|Endurance$/, '$1|Endurance %')
       if (nextKey !== key) {
         if (!Object.hasOwn(owned, nextKey)) owned[nextKey] = isOwned
         delete owned[key]
