@@ -28,6 +28,14 @@ pnpm preview
 
 pnpm check chạy format, lint, contrast, TypeScript và production build. Hook pre-commit chạy cùng gate. Không chỉnh lockfile hoặc output typegen bằng tay.
 
+## Deploy trên Vercel
+
+Project Vercel dùng Git integration với repo [neikop/soulforge](https://github.com/neikop/soulforge). Cấu hình production branch là `main`: mỗi lần push lên `main`, Vercel tự build và deploy Production; các branch/PR đủ điều kiện tạo Preview.
+
+`vercel.json` cố định pnpm 8.9.2, build bằng `pnpm run build` và xuất `dist`. SPA fallback hỗ trợ truy cập trực tiếp hoặc tải lại `/components`, đồng thời giữ riêng request assets và API. Ứng dụng hiện không cần biến môi trường để dùng matrix và checklist.
+
+Sau khi Git integration được kết nối, các lần cập nhật chỉ cần commit và `git push`; không cần chạy lệnh deploy thủ công. Thư mục `.vercel/` chứa liên kết local và được bỏ qua trong Git.
+
 ## Nơi sửa tiếp
 
 - src/views/Soulforge/data.ts: thứ tự slot, pool chỉ số, tier và nhóm dòng.

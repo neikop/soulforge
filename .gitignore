@@ -12,6 +12,7 @@ chakra-config.json
 dist
 dist-ssr
 *.local
+.vercel/
 
 # Editor directories and files
 .vscode/*
