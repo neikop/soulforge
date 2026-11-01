@@ -1,9 +1,11 @@
 import { createSystem, defaultConfig, defineConfig, defineTextStyles, type SystemConfig } from '@chakra-ui/react'
 
+import { layerStyles } from './layerStyles'
 import { matrixTextStyles } from './matrixTokens'
 import {
   alertRecipe,
   buttonRecipe,
+  checkboxRecipe,
   datePickerRecipe,
   dialogRecipe,
   drawerRecipe,
@@ -13,6 +15,7 @@ import {
   linkRecipe,
   radioGroupRecipe,
   tableRecipe,
+  tabsRecipe,
 } from './recipes'
 import { semanticTokens } from './semanticTokens'
 
@@ -86,6 +89,7 @@ const theme: SystemConfig = {
     },
     slotRecipes: {
       alert: alertRecipe,
+      checkbox: checkboxRecipe,
       datePicker: datePickerRecipe,
       dialog: dialogRecipe,
       drawer: drawerRecipe,
@@ -93,7 +97,9 @@ const theme: SystemConfig = {
       field: fieldRecipe,
       radioGroup: radioGroupRecipe,
       table: tableRecipe,
+      tabs: tabsRecipe,
     },
+    layerStyles,
     semanticTokens,
     textStyles,
     tokens: {
@@ -119,13 +125,15 @@ const theme: SystemConfig = {
         titleLarge: { value: '1.75rem' },
       },
       radii: {
-        matrixPanel: { value: '18px' },
         sm: { value: '8px' },
         md: { value: '12px' },
         lg: { value: '16px' },
         xl: { value: '20px' },
       },
       sizes: {
+        workspace: { value: '1600px' },
+        matrix: { value: '1180px' },
+        matrixSlot: { value: '128px' },
         control: {
           lg: { value: '{sizes.10}' },
           md: { value: '{sizes.9}' },
@@ -138,7 +146,6 @@ const theme: SystemConfig = {
           sm: { value: '1.625rem' },
         },
       },
-      shadows: { matrixPanel: { value: '0 22px 60px rgba(0,0,0,.32)' } },
     },
   },
 }
@@ -146,7 +153,7 @@ const theme: SystemConfig = {
 const config = defineConfig({
   globalCss: {
     '*, *::before, *::after': { borderColor: 'border.default', borderStyle: 'solid' },
-    body: { background: 'bg.subtle', color: 'fg.default' },
+    body: { background: 'bg.page', color: 'fg.default', colorPalette: 'primary' },
     html: { '&.dark': { colorScheme: 'dark' }, colorScheme: 'light' },
   },
   ...theme,

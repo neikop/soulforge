@@ -15,9 +15,7 @@ const matrixPalette = JSON.parse(
 for (const [mode, palette] of Object.entries(matrixPalette)) {
   for (const background of ['surface', 'hover']) {
     checks.push({
-      foreground: token(
-        `colors.${families.warning.palette}.${mode === 'dark' ? familyShades.fgDark : familyShades.fgLight}`,
-      ),
+      foreground: color(`${families.warning.palette}.${mode === 'dark' ? familyShades.fgDark : familyShades.fgLight}`),
       background: palette.top[background],
       label: `Unique / matrix.top.${background} (${mode})`,
       minimum: MIN_TEXT_CONTRAST,
@@ -35,104 +33,108 @@ for (const [mode, palette] of Object.entries(matrixPalette)) {
     }
     checks.push({
       foreground: tone.border,
-      background: palette.panel,
+      background: color(neutral.bg.canvas[mode]),
       label: `matrix.${name}.border / panel (${mode})`,
       minimum: MIN_UI_CONTRAST,
     })
   }
-  checks.push(
-    {
-      foreground: palette.text,
-      background: palette.panel,
-      label: `matrix.text / panel (${mode})`,
-      minimum: MIN_TEXT_CONTRAST,
-    },
-    {
-      foreground: palette.muted,
-      background: palette.panel,
-      label: `matrix.muted / panel (${mode})`,
-      minimum: MIN_TEXT_CONTRAST,
-    },
-    {
-      foreground: palette.focus,
-      background: palette.panel,
-      label: `matrix.focus / panel (${mode})`,
+  for (const [surface, background] of Object.entries(neutral.bg).filter(([name]) => name !== 'overlay')) {
+    for (const [role, foreground] of Object.entries(neutral.fg).filter(([role]) => role !== 'inverse')) {
+      checks.push({
+        foreground: color(foreground[mode]),
+        background: color(background[mode]),
+        label: `fg.${role} / bg.${surface} (${mode})`,
+        minimum: MIN_TEXT_CONTRAST,
+      })
+    }
+    checks.push({
+      foreground: color(
+        `${families.primary.palette}.${mode === 'dark' ? familyShades.borderDark : families.primary.border}`,
+      ),
+      background: color(background[mode]),
+      label: `primary.focusRing / bg.${surface} (${mode})`,
       minimum: MIN_UI_CONTRAST,
-    },
-  )
+    })
+  }
+  checks.push({
+    foreground: color(neutral.border.control[mode]),
+    background: color(neutral.bg.subtle[mode]),
+    label: `border.control / bg.subtle (${mode})`,
+    minimum: MIN_UI_CONTRAST,
+  })
 }
 
 for (const [family, { border, palette, solid, solidHover }] of Object.entries(families)) {
   checks.push(
     {
-      background: token(`colors.${palette}.${solid}`),
-      foreground: token('colors.white'),
+      background: color(`${palette}.${solid}`),
+      foreground: color('white'),
       label: `${family}.solid / ${family}.contrast`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${solidHover}`),
-      foreground: token('colors.white'),
+      background: color(`${palette}.${solidHover}`),
+      foreground: color('white'),
       label: `${family}.solidHover / ${family}.contrast`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${neutral.bg.canvas.light}`),
-      foreground: token(`colors.${palette}.${familyShades.fgLight}`),
+      background: color(`${neutral.bg.canvas.light}`),
+      foreground: color(`${palette}.${familyShades.fgLight}`),
       label: `${family}.main / bg.canvas (light)`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${neutral.bg.canvas.dark}`),
-      foreground: token(`colors.${palette}.${familyShades.fgDark}`),
+      background: color(`${neutral.bg.canvas.dark}`),
+      foreground: color(`${palette}.${familyShades.fgDark}`),
       label: `${family}.main / bg.canvas (dark)`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${neutral.bg.canvas.light}`),
-      foreground: token(`colors.${palette}.${border}`),
+      background: color(`${neutral.bg.canvas.light}`),
+      foreground: color(`${palette}.${border}`),
       label: `${family}.border / bg.canvas (light)`,
       minimum: MIN_UI_CONTRAST,
     },
     {
-      background: token(`colors.${neutral.bg.canvas.dark}`),
-      foreground: token(`colors.${palette}.${familyShades.borderDark}`),
+      background: color(`${neutral.bg.canvas.dark}`),
+      foreground: color(`${palette}.${familyShades.borderDark}`),
       label: `${family}.border / bg.canvas (dark)`,
       minimum: MIN_UI_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${familyShades.subtleLight}`),
-      foreground: token(`colors.${palette}.${familyShades.fgLight}`),
+      background: color(`${palette}.${familyShades.subtleLight}`),
+      foreground: color(`${palette}.${familyShades.fgLight}`),
       label: `${family}.fg / ${family}.subtle (light)`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${familyShades.subtleDark}`),
-      foreground: token(`colors.${palette}.${familyShades.fgDark}`),
+      background: color(`${palette}.${familyShades.subtleDark}`),
+      foreground: color(`${palette}.${familyShades.fgDark}`),
       label: `${family}.fg / ${family}.subtle (dark)`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${familyShades.surfaceLight}`),
-      foreground: token(`colors.${palette}.${familyShades.fgLight}`),
+      background: color(`${palette}.${familyShades.surfaceLight}`),
+      foreground: color(`${palette}.${familyShades.fgLight}`),
       label: `${family}.fg / ${family}.surface (light)`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${familyShades.surfaceDark}`),
-      foreground: token(`colors.${palette}.${familyShades.fgDark}`),
+      background: color(`${palette}.${familyShades.surfaceDark}`),
+      foreground: color(`${palette}.${familyShades.fgDark}`),
       label: `${family}.fg / ${family}.surface (dark)`,
       minimum: MIN_TEXT_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${familyShades.surfaceLight}`),
-      foreground: token(`colors.${palette}.${border}`),
+      background: color(`${palette}.${familyShades.surfaceLight}`),
+      foreground: color(`${palette}.${border}`),
       label: `${family}.border / ${family}.surface (light)`,
       minimum: MIN_UI_CONTRAST,
     },
     {
-      background: token(`colors.${palette}.${familyShades.surfaceDark}`),
-      foreground: token(`colors.${palette}.${familyShades.borderDark}`),
+      background: color(`${palette}.${familyShades.surfaceDark}`),
+      foreground: color(`${palette}.${familyShades.borderDark}`),
       label: `${family}.border / ${family}.surface (dark)`,
       minimum: MIN_UI_CONTRAST,
     },
@@ -141,38 +143,38 @@ for (const [family, { border, palette, solid, solidHover }] of Object.entries(fa
 
 checks.push(
   {
-    background: token(`colors.${neutral.bg.canvas.light}`),
-    foreground: token(`colors.${neutral.fg.default.light}`),
+    background: color(`${neutral.bg.canvas.light}`),
+    foreground: color(`${neutral.fg.default.light}`),
     label: 'fg.default / bg.canvas (light)',
     minimum: MIN_TEXT_CONTRAST,
   },
   {
-    background: token(`colors.${neutral.bg.canvas.dark}`),
-    foreground: token(`colors.${neutral.fg.default.dark}`),
+    background: color(`${neutral.bg.canvas.dark}`),
+    foreground: color(`${neutral.fg.default.dark}`),
     label: 'fg.default / bg.canvas (dark)',
     minimum: MIN_TEXT_CONTRAST,
   },
   {
-    background: token(`colors.${neutral.bg.canvas.light}`),
-    foreground: token(`colors.${neutral.fg.subtle.light}`),
+    background: color(`${neutral.bg.canvas.light}`),
+    foreground: color(`${neutral.fg.subtle.light}`),
     label: 'fg.subtle / bg.canvas (light)',
     minimum: MIN_TEXT_CONTRAST,
   },
   {
-    background: token(`colors.${neutral.bg.canvas.dark}`),
-    foreground: token(`colors.${neutral.fg.subtle.dark}`),
+    background: color(`${neutral.bg.canvas.dark}`),
+    foreground: color(`${neutral.fg.subtle.dark}`),
     label: 'fg.subtle / bg.canvas (dark)',
     minimum: MIN_TEXT_CONTRAST,
   },
   {
-    background: token(`colors.${neutral.bg.subtle.light}`),
-    foreground: token(`colors.${neutral.fg.default.light}`),
+    background: color(`${neutral.bg.subtle.light}`),
+    foreground: color(`${neutral.fg.default.light}`),
     label: 'fg.default / bg.subtle (light)',
     minimum: MIN_TEXT_CONTRAST,
   },
   {
-    background: token(`colors.${neutral.bg.subtle.dark}`),
-    foreground: token(`colors.${neutral.fg.default.dark}`),
+    background: color(`${neutral.bg.subtle.dark}`),
+    foreground: color(`${neutral.fg.default.dark}`),
     label: 'fg.default / bg.subtle (dark)',
     minimum: MIN_TEXT_CONTRAST,
   },
@@ -191,8 +193,8 @@ if (failures.length) {
   console.log(`Theme contrast passed for ${checks.length} semantic text and UI-boundary pairs.`)
 }
 
-function token(path) {
-  const value = defaultSystem.token(path)
+function color(path) {
+  const value = path.startsWith('#') ? path : defaultSystem.token(`colors.${path}`)
 
   if (!value.startsWith('#')) {
     throw new Error(`Expected ${path} to resolve to a hex color, received ${value}`)

@@ -19,10 +19,10 @@
       "solidHover": "700"
     },
     "primary": {
-      "border": "500",
-      "palette": "purple",
-      "solid": "600",
-      "solidHover": "700"
+      "border": "700",
+      "palette": "cyan",
+      "solid": "700",
+      "solidHover": "800"
     },
     "success": {
       "border": "600",
@@ -52,19 +52,62 @@
   },
   "neutral": {
     "bg": {
-      "canvas": { "dark": "gray.950", "light": "white" },
-      "muted": { "dark": "gray.800", "light": "gray.100" },
-      "overlay": { "dark": "black", "light": "gray.900" },
-      "subtle": { "dark": "gray.900", "light": "gray.50" }
+      "page": {
+        "dark": "#07101f",
+        "light": "#f1f5fb"
+      },
+      "canvas": {
+        "dark": "#0e1e33",
+        "light": "#ffffff"
+      },
+      "subtle": {
+        "dark": "#081525",
+        "light": "#f5f8fc"
+      },
+      "muted": {
+        "dark": "#102943",
+        "light": "#e3edf8"
+      },
+      "elevated": {
+        "dark": "#10223a",
+        "light": "#edf3fa"
+      },
+      "hover": {
+        "dark": "#1b3854",
+        "light": "#d1e3f5"
+      },
+      "overlay": {
+        "dark": "black",
+        "light": "gray.900"
+      }
     },
     "border": {
-      "default": { "dark": "gray.800", "light": "gray.200" }
+      "default": {
+        "dark": "#203754",
+        "light": "#c6d3e2"
+      },
+      "control": {
+        "dark": "#506b87",
+        "light": "#718da6"
+      }
     },
     "fg": {
-      "default": { "dark": "gray.50", "light": "gray.900" },
-      "inverse": { "dark": "white", "light": "white" },
-      "muted": { "dark": "gray.300", "light": "gray.700" },
-      "subtle": { "dark": "gray.400", "light": "gray.600" }
+      "default": {
+        "dark": "#e9f2ff",
+        "light": "#172a44"
+      },
+      "muted": {
+        "dark": "#91a7c1",
+        "light": "#52657c"
+      },
+      "subtle": {
+        "dark": "#91a7c1",
+        "light": "#52657c"
+      },
+      "inverse": {
+        "dark": "white",
+        "light": "white"
+      }
     }
   }
 }

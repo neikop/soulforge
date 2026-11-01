@@ -1,7 +1,19 @@
-# Source Code Rules
+# Coding Conventions
 
 Coding contract for humans and agents. The goal is a codebase that stays clean, predictable, and easy to extend after
 every change.
+
+## Document ownership
+
+This is the coding and UI contract. Use [README.md](README.md) for setup and the source map,
+[CONTRIBUTING.md](CONTRIBUTING.md) for the work sequence and verification matrix, and [AGENTS.md](AGENTS.md) for agent
+execution instructions. Planner-specific display rules, source evidence and persistence contracts live in
+[docs/game-data.md](docs/game-data.md).
+
+The configuration owns enforced details: `.prettierrc`, `.editorconfig` and `.gitattributes` define formatting and line
+endings; `eslint.config.js` and `tsconfig*.json` define static checks; `package.json` defines commands. Theme code owns
+runtime visual values and `/components` demonstrates the public result. Update these together when a contract changes;
+do not add a second convention document with competing rules.
 
 ## Change discipline
 
@@ -28,6 +40,18 @@ every change.
 - React Router and URL state own navigation and shareable filters.
 - Local interaction state stays in the nearest component.
 - Avoid circular dependencies, especially through barrel files.
+
+### Planner data and persistence
+
+- Keep stat pools, board targets, tiers and priorities in the owning feature's `data.ts`, outside rendering code.
+- Stored keys are identifiers, not presentation text. Preserve them across copy edits; intentional changes need a
+  migration and regression coverage at the storage boundary.
+- Derive counts and progress from the owning data definitions. Keep paired item selections and board selections
+  independent; never use a label shared by multiple items as their only storage key.
+- Parse browser storage as `unknown`, validate its shape and keep a usable in-memory checklist when storage is invalid
+  or unavailable. Use the shared feedback mechanism when a save fails.
+- Record gameplay source provenance and uncertainty in `docs/game-data.md`; visual refactors must not imply that game
+  mechanics were revalidated.
 
 ## Naming and files
 
@@ -141,6 +165,20 @@ Before creating or promoting a common component, choose the smallest correct abs
 - Keep `App.scss` for truly global styles only; avoid global component selectors and `!important`.
 - Run `pnpm chakra-typegen` after changing tokens, text styles, or recipes.
 
+### Shared page structure
+
+- All routes use `AppLayout` for the sticky header, navigation, theme control and responsive workspace. Do not add a
+  second page shell or redefine page backgrounds within a view.
+- Use `PageHeader` for a compact route title, inline context and optional progress count. Features own the count and
+  its label. Avoid repeated tab headings, introductory copy and separate summary cards above planner tables; put
+  detailed guidance behind a disclosure when needed.
+- Use `panel`, `tableContainer` and `tierCard` layer styles for shared surfaces. Use the `matrix` table, `planner` tabs,
+  `stat` button and `target` checkbox variants for the planner UI.
+- Keep neutral colors in `semantic-palettes.json` and priority colors in `matrix-palette.json`. Feature styles must not
+  redefine those colors or duplicate recipe interaction states.
+- Product labels, instructions, tooltips and feedback use concise English. Preserve in-game stat names and stored
+  progress keys when editing wording.
+
 ### Theme source of truth and CSS ownership
 
 - `components/theme` is the runtime source of truth for tokens, text styles, recipes, control geometry, and interaction
@@ -170,10 +208,11 @@ Before creating or promoting a common component, choose the smallest correct abs
 - Keep feedback colors semantic and product-independent: `success`, `warning`, `error`, and `info`.
 - Rebranding should primarily change the theme; dark mode must use complete semantic-token conditions rather than
   scattered feature-level `_dark` overrides.
-- Neutral and feedback semantic tokens must define complete `_light` and `_dark` values. The app follows the system mode
-  by default and exposes an explicit mode control without changing component APIs.
-- Use `border.default` for subtle dividers, surface boundaries, and idle form controls. Focus, invalid, selected, and other
-  semantic states may replace it with their semantic border token without changing border width or geometry.
+- Neutral and feedback semantic tokens must define complete `_light` and `_dark` values. The app defaults to dark mode,
+  remembers the user's explicit choice and exposes a mode control in the shared header without changing component APIs.
+- Use `border.default` for subtle dividers and surface boundaries. Controls that need a stronger idle boundary use
+  `border.control` through their recipe. Focus, invalid, selected and other semantic states may replace it with their
+  semantic border token without changing border width or geometry.
 - Keep logos and illustrations in assets rather than the theme.
 - Keep `components/theme/index.ts` as the assembly root; split tokens, text styles, and global CSS into focused modules
   when the file grows.
@@ -200,6 +239,8 @@ Before creating or promoting a common component, choose the smallest correct abs
 - Product UI uses only the semantic font weights `normal` (400), `mid` (600), and `bold` (700). Body copy uses `normal`,
   buttons and labels use `mid`, and titles use `bold`; do not use numeric weights or direct `medium`/`semibold` aliases in
   source code.
+- Matrix roles follow the same scale: `matrixSlot` and `matrixTier` (14/20px) use bold; `matrixHeader` and
+  `matrixPill` (12/16px) use mid; `matrixNote` (12/16px) uses normal.
 - Use content roles `meta` (12/16 mid), `bodyCompact` (12/16 normal), `body` (14/20 normal), `bodyLarge` (16/24 normal),
   `titleCompact` (14/20 bold), `title` (16/24 bold), `titleLarge` (20/28 bold), `sectionTitle` (24/32 to 30/36 bold), and
   `display` (30/36 to 48/56 bold). Controls use `actionCompact` (12/16 mid), `action` (14/20 mid), `actionLarge` (16/24
@@ -276,7 +317,11 @@ Before creating or promoting a common component, choose the smallest correct abs
 ## Formatting and linting
 
 - Prettier owns formatting: single quotes, no semicolons, trailing commas, LF, and 120-character print width.
+- `.editorconfig` keeps editor defaults at UTF-8, two spaces and a final newline. `.gitattributes` keeps text files on
+  LF across platforms and marks binary assets explicitly. Do not renormalize or reformat unrelated files.
 - ESLint owns code quality, hooks, import ordering, React Refresh, and Prettier integration.
+- Some lint rules are advisory. Fix newly introduced warnings in the changed surface; conventions that are not checked
+  automatically still require review.
 - Use `pnpm lint:fix` for safe automatic fixes and review the diff.
 - Do not disable a rule globally to solve one local issue.
 
@@ -290,5 +335,6 @@ Before creating or promoting a common component, choose the smallest correct abs
   or above their documented thresholds.
 - Theme, token, text-style, or recipe changes run `pnpm chakra-typegen` before static verification.
 - Run `pnpm check` and fix formatting, lint, type, or build failures rather than bypassing the gate.
+- Run `git diff --check` and the behavior-specific checks in [CONTRIBUTING.md](CONTRIBUTING.md#verification).
 - Report verification that could not run and the exact reason; do not claim runtime, visual, or accessibility checks that
   were not performed.

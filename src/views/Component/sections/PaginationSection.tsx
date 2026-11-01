@@ -9,7 +9,7 @@ export function PaginationSection() {
   const [pageSize, setPageSize] = useState(10)
 
   return (
-    <Stack gap={5} id="pagination" scrollMarginTop="12px">
+    <Stack gap={5} id="pagination" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Pagination"
         subtitle="The common component owns navigation anatomy, responsive controls, result summary and page-size selection. Features own query state, URL synchronization and data fetching."

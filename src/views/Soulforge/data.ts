@@ -1473,31 +1473,31 @@ export const BRACELET_ENTRIES: BraceletEntry[] = [
   {
     tone: 'optional',
     label: 'Justice · Nezekan',
-    rank: 'S · thêm khi có chỗ / heroic / Legendary Stone',
+    rank: 'S · Spare slots / Heroic / Legendary Stone',
   },
   {
     tone: 'optional',
     label: 'Freedom · Vaizel',
-    rank: 'S điều kiện · heroic bracelet',
+    rank: 'S · Conditional on Heroic Bracelet',
   },
   {
     tone: 'optional',
     label: 'Death · Triniel',
-    rank: 'S điều kiện · heroic bracelet',
+    rank: 'S · Conditional on Heroic Bracelet',
   },
   {
     tone: 'low',
     label: 'Destiny · Marchutan',
-    rank: 'Không ưu tiên DPS',
+    rank: 'Low DPS priority',
   },
   {
     tone: 'low',
     label: 'Life · Yustiel',
-    rank: 'Không ưu tiên DPS',
+    rank: 'Low DPS priority',
   },
   {
     tone: 'low',
     label: 'Space · Israphel',
-    rank: 'Không ưu tiên DPS',
+    rank: 'Low DPS priority',
   },
 ]

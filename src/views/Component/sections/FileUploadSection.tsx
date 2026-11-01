@@ -15,7 +15,7 @@ export function FileUploadSection() {
   const [logoFiles, setLogoFiles] = useState<File[]>([])
 
   return (
-    <Stack gap={5} id="file-upload" scrollMarginTop="12px">
+    <Stack gap={5} id="file-upload" scrollMarginTop="28">
       <SectionHeading
         eyebrow="File Upload"
         subtitle="The shared field owns selection, constraints, removal and local preview. Features still own remote URLs, API uploads and persistence."

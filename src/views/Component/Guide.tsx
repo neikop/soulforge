@@ -1,4 +1,5 @@
 import { Box, Grid, HStack, Link, Stack, Text } from '@chakra-ui/react'
+import { PageHeader } from 'components/layouts'
 import { useEffect, useRef, useState } from 'react'
 
 import { guideSections } from './constants'
@@ -71,7 +72,7 @@ const Guide = () => {
 
     const updateActiveSection = () => {
       const rootTop = scrollParent === window ? 0 : (scrollParent as HTMLElement).getBoundingClientRect().top
-      const threshold = rootTop + 40
+      const threshold = rootTop + 128
 
       let nextActiveSection = firstSection.id
 
@@ -99,76 +100,78 @@ const Guide = () => {
   }, [])
 
   return (
-    <Grid
-      alignItems="start"
-      gap={{ base: 8, xl: 10 }}
-      px={{ base: 1, md: 2 }}
-      ref={containerRef}
-      templateColumns={{ base: 'minmax(0, 1fr)', xl: 'minmax(0, 1fr) 17rem' }}
-    >
-      <Stack gap={{ base: 8, md: 10 }}>
-        <OverviewSection />
-        <TypographySection />
-        <SkeletonSection />
-        <ButtonSection />
-        <InputSection />
-        <SelectSection />
-        <DatePickerSection />
-        <FileUploadSection />
-        <TableSection />
-        <PaginationSection />
-        <FeedbackSection />
-        <OverlaySection />
-        <SharedUiSection />
-        <TokenSection />
-        <FormSection />
-      </Stack>
-
-      <Stack
-        aria-label="Component guide sections"
-        as="nav"
-        display={{ base: 'none', xl: 'flex' }}
-        position="sticky"
-        top="12px"
+    <Stack gap={{ base: 5, md: 6 }}>
+      <PageHeader context="Design system" title="Component Guide" />
+      <Grid
+        alignItems="start"
+        gap={{ base: 8, xl: 10 }}
+        ref={containerRef}
+        templateColumns={{ base: 'minmax(0, 1fr)', xl: 'minmax(0, 1fr) 17rem' }}
       >
-        <Stack backdropFilter="blur(14px)" background="bg.canvas" borderRadius="lg" borderWidth={1} gap={5} p={6}>
-          <Text color="fg.subtle" textStyle="meta">
-            On this page
-          </Text>
+        <Stack gap={{ base: 8, md: 10 }}>
+          <OverviewSection />
+          <TypographySection />
+          <SkeletonSection />
+          <ButtonSection />
+          <InputSection />
+          <SelectSection />
+          <DatePickerSection />
+          <FileUploadSection />
+          <TableSection />
+          <PaginationSection />
+          <FeedbackSection />
+          <OverlaySection />
+          <SharedUiSection />
+          <TokenSection />
+          <FormSection />
+        </Stack>
 
-          <Stack gap={2}>
-            {guideSections.map((section) => (
-              <Link
-                _hover={{ color: 'primary.main', textDecoration: 'none' }}
-                alignSelf="flex-start"
-                aria-current={activeSectionId === section.id ? 'location' : undefined}
-                color={activeSectionId === section.id ? 'primary.main' : 'fg.muted'}
-                display="inline-flex"
-                href={`#${section.id}`}
-                key={section.id}
-                textDecoration="none"
-              >
-                <HStack
-                  _hover={{ background: 'primary.surface' }}
-                  background={activeSectionId === section.id ? 'primary.surface' : 'bg.canvas'}
-                  borderRadius="md"
-                  gap={3}
-                  px={3}
-                  py={2}
+        <Stack
+          aria-label="Component guide sections"
+          as="nav"
+          display={{ base: 'none', xl: 'flex' }}
+          position="sticky"
+          top="28"
+        >
+          <Stack gap={4} layerStyle="panel" maxH="calc(100vh - 8rem)" overflowY="auto" p={4}>
+            <Text color="fg.subtle" textStyle="meta">
+              On this page
+            </Text>
+
+            <Stack gap={2}>
+              {guideSections.map((section) => (
+                <Link
+                  _hover={{ color: 'primary.main', textDecoration: 'none' }}
+                  alignSelf="flex-start"
+                  aria-current={activeSectionId === section.id ? 'location' : undefined}
+                  color={activeSectionId === section.id ? 'primary.main' : 'fg.muted'}
+                  display="inline-flex"
+                  href={`#${section.id}`}
+                  key={section.id}
+                  textDecoration="none"
                 >
-                  <Text color={activeSectionId === section.id ? 'primary.main' : 'fg.subtle'} textStyle="meta">
-                    {section.order}
-                  </Text>
-                  <Text textStyle="title">{section.label}</Text>
-                </HStack>
-              </Link>
-            ))}
+                  <HStack
+                    _hover={{ background: 'primary.surface' }}
+                    background={activeSectionId === section.id ? 'primary.surface' : 'bg.canvas'}
+                    borderRadius="md"
+                    gap={3}
+                    px={3}
+                    py={2}
+                  >
+                    <Text color={activeSectionId === section.id ? 'primary.main' : 'fg.subtle'} textStyle="meta">
+                      {section.order}
+                    </Text>
+                    <Text textStyle="title">{section.label}</Text>
+                  </HStack>
+                </Link>
+              ))}
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
 
-      <Box height="50vh" />
-    </Grid>
+        <Box h="50vh" />
+      </Grid>
+    </Stack>
   )
 }
 

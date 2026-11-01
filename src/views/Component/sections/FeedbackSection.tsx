@@ -13,7 +13,7 @@ export function FeedbackSection() {
   const [isSaved, setIsSaved] = useState(false)
 
   return (
-    <Stack gap={5} id="feedback" scrollMarginTop="12px">
+    <Stack gap={5} id="feedback" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Feedback"
         subtitle="Alerts communicate status without inventing feature-specific styling. Empty State describes an absent result and leaves recovery actions to the feature."

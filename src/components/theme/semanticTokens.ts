@@ -3,7 +3,7 @@ import { defineSemanticTokens } from '@chakra-ui/react'
 import { matrixColors } from './matrixTokens'
 import semanticPaletteConfig from './semantic-palettes.json'
 
-type PaletteName = 'blue' | 'gray' | 'green' | 'orange' | 'purple' | 'red'
+type PaletteName = 'blue' | 'cyan' | 'gray' | 'green' | 'orange' | 'purple' | 'red'
 
 type SemanticPaletteConfig = {
   border: string
@@ -17,7 +17,7 @@ type ModeColor = {
   light: string
 }
 
-const colorReference = (path: string) => `{colors.${path}}`
+const colorReference = (path: string) => (path.startsWith('#') ? path : `{colors.${path}}`)
 const createModeColor = ({ dark, light }: ModeColor) => ({
   value: { _dark: colorReference(dark), _light: colorReference(light) },
 })
@@ -75,12 +75,18 @@ export const semanticTokens = defineSemanticTokens({
   colors: {
     ...matrixColors,
     bg: {
+      page: createModeColor(semanticPaletteConfig.neutral.bg.page),
       canvas: createModeColor(semanticPaletteConfig.neutral.bg.canvas),
+      elevated: createModeColor(semanticPaletteConfig.neutral.bg.elevated),
+      hover: createModeColor(semanticPaletteConfig.neutral.bg.hover),
       muted: createModeColor(semanticPaletteConfig.neutral.bg.muted),
       overlay: createModeColor(semanticPaletteConfig.neutral.bg.overlay),
       subtle: createModeColor(semanticPaletteConfig.neutral.bg.subtle),
     },
-    border: { default: createModeColor(semanticPaletteConfig.neutral.border.default) },
+    border: {
+      control: createModeColor(semanticPaletteConfig.neutral.border.control),
+      default: createModeColor(semanticPaletteConfig.neutral.border.default),
+    },
     fg: {
       default: createModeColor(semanticPaletteConfig.neutral.fg.default),
       inverse: createModeColor(semanticPaletteConfig.neutral.fg.inverse),

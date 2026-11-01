@@ -1,6 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react'
 import { tableAnatomy } from '@chakra-ui/react/anatomy'
 
+import { matrixToneStyles } from '../matrixStyles'
+
 export const tableRecipe = defineSlotRecipe({
   className: 'chakra-table',
   slots: tableAnatomy.keys(),
@@ -89,6 +91,42 @@ export const tableRecipe = defineSlotRecipe({
       },
     },
     variant: {
+      matrix: {
+        root: {
+          bg: 'bg.subtle',
+          borderCollapse: 'separate',
+          borderSpacing: 0,
+          minW: 'matrix',
+          tableLayout: 'fixed',
+          textStyle: 'bodyCompact',
+          _print: { minW: 0 },
+        },
+        columnHeader: {
+          bg: 'bg.muted',
+          borderBottomWidth: '1px',
+          borderInlineEndWidth: '1px',
+          px: 3,
+          py: 3,
+          textStyle: 'actionCompact',
+          textTransform: 'none',
+          '&:first-of-type': { bg: 'bg.elevated', left: 0, position: 'sticky', zIndex: 1 },
+          '&:last-of-type': { borderInlineEndWidth: 0 },
+        },
+        cell: {
+          ...matrixToneStyles,
+          borderBottomWidth: '1px',
+          borderInlineEndWidth: '1px',
+          px: 3,
+          py: 3,
+          '&:first-of-type': { bg: 'bg.elevated', left: 0, position: 'sticky', zIndex: 1 },
+          '&:last-of-type': { borderInlineEndWidth: 0 },
+          '&[data-tone]': { bg: 'var(--tier-surface)', color: 'var(--tier-fg)' },
+        },
+        row: {
+          '&:last-of-type > td, &:last-of-type > th[scope="row"]': { borderBottomWidth: 0 },
+          _hover: { '& > td[data-tone]': { bg: 'var(--tier-hover)' } },
+        },
+      },
       line: {
         body: {
           '& > tr': {

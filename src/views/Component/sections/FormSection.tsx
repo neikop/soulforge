@@ -44,7 +44,7 @@ export function FormSection() {
   })
 
   return (
-    <Stack gap={5} id="forms" scrollMarginTop="12px">
+    <Stack gap={5} id="forms" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Forms"
         subtitle="Compose the shared wrappers with React Hook Form while keeping validation and submission state in the owning feature."

@@ -30,7 +30,7 @@ export function SelectSection() {
   const chakraLabel = useMemo(() => formatFrameworkValue(chakraValue), [chakraValue])
 
   return (
-    <Stack gap={5} id="selects" scrollMarginTop="12px">
+    <Stack gap={5} id="selects" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Selects"
         subtitle="This group compares the custom react-select wrapper with Chakra v3 Select so you can evaluate ergonomics, styling control and UX differences side by side."

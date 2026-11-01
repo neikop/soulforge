@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64" fill="none">
+  <title>Soulforge</title>
+  <defs>
+    <linearGradient id="tile" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#142e4b" />
+      <stop offset="1" stop-color="#07101f" />
+    </linearGradient>
+    <linearGradient id="rune" x1="26" y1="14" x2="38" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c8f4ff" />
+      <stop offset="0.45" stop-color="#62ddff" />
+      <stop offset="1" stop-color="#37b7e5" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#tile)" />
+  <path d="M48 14H27L14 27V33L26 40H40V44H21L14 50H38L50 38V32L38 25H25V21H41L48 14Z" fill="url(#rune)" />
+</svg>

@@ -10,7 +10,7 @@ export function SkeletonSection() {
   const [isLoading, setIsLoading] = useState(true)
 
   return (
-    <Stack gap={5} id="skeletons" scrollMarginTop="12px">
+    <Stack gap={5} id="skeletons" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Skeletons"
         subtitle="Skeleton is implemented locally with semantic theme colors. Its required height makes the loading footprint explicit instead of relying on content to reserve space."

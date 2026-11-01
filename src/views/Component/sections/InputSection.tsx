@@ -9,7 +9,7 @@ export function InputSection() {
   const [role, setRole] = useState('user')
 
   return (
-    <Stack gap={5} id="inputs" scrollMarginTop="12px">
+    <Stack gap={5} id="inputs" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Inputs"
         subtitle="Use the base Chakra input styles for standard text entry so forms stay aligned with the same neutral surfaces, borders and sizing rhythm."

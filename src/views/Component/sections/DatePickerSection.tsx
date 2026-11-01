@@ -33,7 +33,7 @@ export function DatePickerSection() {
   }, [selectedDate])
 
   return (
-    <Stack gap={5} id="date-picker" scrollMarginTop="12px">
+    <Stack gap={5} id="date-picker" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Date Picker"
         subtitle="Use the shared Chakra Date Picker wrapper instead of native date inputs so forms keep the same interaction pattern and surface styling."

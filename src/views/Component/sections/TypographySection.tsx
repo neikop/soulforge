@@ -89,9 +89,17 @@ const fontWeightItems = [
   },
 ] as const
 
+const matrixTypographyItems = [
+  { label: 'matrixSlot', metrics: '14/20px · bold 700', preview: 'Gear slot' },
+  { label: 'matrixTier', metrics: '14/20px · bold 700', preview: 'S+' },
+  { label: 'matrixHeader', metrics: '12/16px · mid 600', preview: 'Stat column' },
+  { label: 'matrixPill', metrics: '12/16px · mid 600', preview: 'Max Attack' },
+  { label: 'matrixNote', metrics: '12/16px · normal 400', preview: 'Supporting detail' },
+] as const
+
 export function TypographySection() {
   return (
-    <Stack gap={5} id="typography" scrollMarginTop="12px">
+    <Stack gap={5} id="typography" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Typography"
         subtitle="Content and control roles each own a fixed size, line-height and weight combination. Product UI uses only normal, mid and bold weights."
@@ -132,6 +140,19 @@ export function TypographySection() {
             </Stack>
           ))}
         </Stack>
+      </DocsCard>
+
+      <DocsCard title="Planner roles">
+        <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+          {matrixTypographyItems.map((item) => (
+            <Stack borderRadius="md" borderWidth={1} gap={2} key={item.label} p={4}>
+              <Text textStyle={item.label}>{item.preview}</Text>
+              <Text color="fg.muted" textStyle="bodyCompact">
+                {item.label} · {item.metrics}
+              </Text>
+            </Stack>
+          ))}
+        </SimpleGrid>
       </DocsCard>
 
       <DocsCard title="Weight roles">

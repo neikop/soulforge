@@ -1,17 +1,16 @@
 import { Box, SimpleGrid, Text } from '@chakra-ui/react'
 
 import { BRACELET_ENTRIES } from './data'
-import styles from './Soulforge.module.scss'
+
+const ENTRY_TONES = { core: 's', optional: 'top', low: 'a' } as const
 
 export function BraceletList() {
   return (
-    <SimpleGrid columns={{ base: 1, sm: 2 }} gap="10px">
+    <SimpleGrid columns={{ base: 1, sm: 2 }} gap={4}>
       {BRACELET_ENTRIES.map((entry) => (
-        <Box className={styles.bracelet} data-tone={entry.tone} key={entry.label} p="14px">
+        <Box data-tone={ENTRY_TONES[entry.tone]} key={entry.label} layerStyle="tierCard" p={4}>
           <Text textStyle="matrixSlot">{entry.label}</Text>
-          <Text color="matrix.muted" textStyle="matrixNote">
-            {entry.rank}
-          </Text>
+          <Text textStyle="matrixNote">{entry.rank}</Text>
         </Box>
       ))}
     </SimpleGrid>

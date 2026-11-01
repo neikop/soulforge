@@ -1,38 +1,109 @@
-import { SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { Button, Checkbox, HStack, SimpleGrid, Stack, Tabs, Text } from '@chakra-ui/react'
+import { useState } from 'react'
 
 import { DocsCard, SectionHeading } from '../shared'
 
 export function OverviewSection() {
+  const [selectedStats, setSelectedStats] = useState<Record<string, boolean>>({ owned: true })
+
+  function handleToggleStat(key: string) {
+    setSelectedStats((previous) => ({ ...previous, [key]: !previous[key] }))
+  }
+
   return (
-    <Stack id="overview" scrollMarginTop="12px">
+    <Stack gap={5} id="overview" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Overview"
-        subtitle="Built like a reference page, not a dev sandbox. The content reflects the current system: compact semantic tokens, shared recipes, and fewer component-level overrides."
-        title="The page is organized like a UI library doc."
+        subtitle="A shared navy and cyan palette, compact spacing and clear type hierarchy keep every screen consistent."
+        title="One system across every screen"
       />
 
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap={5}>
-        <DocsCard minH="13rem" title="Narrative layout">
+        <DocsCard title="Layout">
           <Text color="fg.subtle" textStyle="body">
-            The page introduces the system in layers: shared foundations first, then component previews, then token
-            rules and edge cases.
+            Every page uses the same header, navigation and workspace width. Tables scroll within their own surface on
+            smaller screens.
           </Text>
         </DocsCard>
 
-        <DocsCard minH="13rem" title="Interactive surface">
+        <DocsCard title="Typography">
           <Text color="fg.subtle" textStyle="body">
-            Components remain clickable and stateful, so this page doubles as a sanity check for default borders, text
-            color inheritance and status token contrast.
+            Titles use bold, labels use mid and supporting text uses normal. Compact text roles keep planner tables
+            readable.
           </Text>
         </DocsCard>
 
-        <DocsCard minH="13rem" title="Compact tokens">
+        <DocsCard title="Color">
           <Text color="fg.subtle" textStyle="body">
-            The current theme favors a short token vocabulary. Most UI should rely on defaults, then opt into semantic
-            states only when meaning changes.
+            Cyan marks active controls. Gold, green, purple and blue identify priority tiers. Both light and dark modes
+            use the same roles.
           </Text>
         </DocsCard>
       </SimpleGrid>
+
+      <DocsCard title="Planner controls">
+        <Tabs.Root defaultValue="priorities" variant="planner">
+          <Tabs.List aria-label="Planner control example">
+            <Tabs.Indicator />
+            <Tabs.Trigger value="priorities">Priorities</Tabs.Trigger>
+            <Tabs.Trigger value="progress">Progress</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="priorities">
+            <HStack flexWrap="wrap" gap={3}>
+              {(['top', 's', 'aplus', 'a'] as const).map((tone, index) => (
+                <Button
+                  aria-pressed={selectedStats[tone] === true}
+                  data-tone={tone}
+                  key={tone}
+                  onClick={() => handleToggleStat(tone)}
+                  variant="stat"
+                >
+                  {['S+', 'S', 'A+', 'A'][index]} · Stat option {selectedStats[tone] ? '✓' : ''}
+                </Button>
+              ))}
+              <Button
+                aria-pressed={selectedStats.owned === true}
+                data-tone="s"
+                onClick={() => handleToggleStat('owned')}
+                variant="stat"
+              >
+                Owned stat {selectedStats.owned ? '✓' : ''}
+              </Button>
+              <Button data-tone="a" disabled variant="stat">
+                Unavailable stat
+              </Button>
+            </HStack>
+          </Tabs.Content>
+          <Tabs.Content value="progress">
+            <Text color="fg.muted" textStyle="body">
+              Check a target below to preview its completed state.
+            </Text>
+          </Tabs.Content>
+        </Tabs.Root>
+        <SimpleGrid columns={{ base: 1, md: 3 }} gap={3}>
+          <Checkbox.Root data-tone="top" variant="target">
+            <Checkbox.HiddenInput />
+            <Checkbox.Control>
+              <Checkbox.Indicator />
+            </Checkbox.Control>
+            <Checkbox.Label>Target to keep · S+</Checkbox.Label>
+          </Checkbox.Root>
+          <Checkbox.Root data-tone="s" defaultChecked variant="target">
+            <Checkbox.HiddenInput />
+            <Checkbox.Control>
+              <Checkbox.Indicator />
+            </Checkbox.Control>
+            <Checkbox.Label>Completed target · S</Checkbox.Label>
+          </Checkbox.Root>
+          <Checkbox.Root data-tone="a" disabled variant="target">
+            <Checkbox.HiddenInput />
+            <Checkbox.Control>
+              <Checkbox.Indicator />
+            </Checkbox.Control>
+            <Checkbox.Label>Unavailable target · A</Checkbox.Label>
+          </Checkbox.Root>
+        </SimpleGrid>
+      </DocsCard>
     </Stack>
   )
 }

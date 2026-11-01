@@ -18,7 +18,7 @@ const CircleIcon = () => (
 
 export function ButtonSection() {
   return (
-    <Stack gap={5} id="buttons" scrollMarginTop="12px">
+    <Stack gap={5} id="buttons" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Buttons"
         subtitle="Recipes resolve every `colorPalette` through app-owned semantic tokens. Variants below share accessible solid/contrast pairs and stable geometry."

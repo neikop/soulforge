@@ -12,8 +12,8 @@ const STAT_GROUPS = [
 ] as const
 
 const STAT_COLUMNS = [
-  { category: 'attack', label: 'Tấn công' },
-  { category: 'defense', label: 'Phòng thủ' },
+  { category: 'attack', label: 'Attack' },
+  { category: 'defense', label: 'Defense' },
 ] as const
 
 type GearListProps = {
@@ -24,43 +24,39 @@ type GearListProps = {
 
 export function GearList({ slots, ownedLines, onToggle }: GearListProps) {
   return (
-    <SimpleGrid aria-label="Danh sách đồ và tiến độ sở hữu" columns={{ base: 1, lg: 2 }} gap="16px" id="gearList">
+    <SimpleGrid aria-label="Gear and owned stats" columns={{ base: 1, lg: 2 }} gap={4} id="gearList">
       {slots.map((slot) => (
         <Box
           aria-labelledby={`gear-${slot.id}`}
           as="article"
-          bg="matrix.field"
-          borderColor="matrix.line"
-          borderRadius="12px"
-          borderWidth="1px"
           data-slot={slot.id}
           key={slot.id}
-          minW="0"
+          layerStyle="panel"
+          minW={0}
         >
           <Flex
             align="center"
             as="header"
-            bg="matrix.slot"
-            borderBottomColor="matrix.line"
+            bg="bg.elevated"
             borderBottomWidth="1px"
-            borderTopRadius="12px"
-            gap="12px"
+            borderTopRadius="lg"
+            gap={3}
             justify="space-between"
-            px="14px"
-            py="10px"
+            px={4}
+            py={3}
           >
             <Heading as="h2" id={`gear-${slot.id}`} textStyle="matrixSlot">
               {slot.label}
             </Heading>
             {slot.note && (
-              <Text color="matrix.muted" textStyle="matrixNote">
+              <Text color="fg.muted" textStyle="matrixNote">
                 {slot.note}
               </Text>
             )}
           </Flex>
-          <SimpleGrid columnGap="12px" columns={2} p="14px" rowGap="6px">
+          <SimpleGrid columnGap={3} columns={2} p={4} rowGap={2}>
             {STAT_COLUMNS.map((column) => (
-              <Text color="matrix.muted" key={column.category} textStyle="matrixNote">
+              <Text color="fg.muted" key={column.category} textStyle="actionCompact">
                 {column.label}
               </Text>
             ))}
@@ -74,10 +70,10 @@ export function GearList({ slots, ownedLines, onToggle }: GearListProps) {
                     data-category={column.category}
                     data-tier={tier}
                     flexWrap="wrap"
-                    gap="6px"
+                    gap={1.5}
                     key={`${tier}-${column.category}`}
-                    minH="24px"
-                    minW="0"
+                    minH={6}
+                    minW={0}
                   >
                     {slot.lines[index]
                       .filter((line) => line.category === column.category)

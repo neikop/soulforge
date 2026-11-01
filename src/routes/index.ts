@@ -7,4 +7,8 @@ export const appRoutes = {
     label: 'Soulforge',
     path: '/',
   },
+  genusInsight: {
+    label: 'Genus Insight',
+    path: '/genus-insight',
+  },
 } as const

@@ -1,8 +1,7 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, Icon } from '@chakra-ui/react'
+import { FiCheck } from 'react-icons/fi'
 
 import type { StatLine } from './types'
-
-import styles from './Soulforge.module.scss'
 
 type StatPillProps = {
   isOwned: boolean
@@ -14,18 +13,16 @@ type StatPillProps = {
 export function StatPill({ line, slot, isOwned, onToggle }: StatPillProps) {
   return (
     <Button
-      aria-label={`${slot} · ${line.label}${line.isUnique ? ' · Unique' : ''} · ${isOwned ? 'Đã sở hữu' : 'Chưa sở hữu'}`}
+      aria-label={`${slot} · ${line.label}${line.isUnique ? ' · Unique' : ''} · ${isOwned ? 'Owned' : 'Not owned'}`}
       aria-pressed={isOwned}
-      className={styles.pill}
       data-owned-key={line.key}
       data-stat={line.label}
       data-tone={line.tone}
       data-unique={line.isUnique || undefined}
       onClick={() => onToggle(line.key)}
-      textStyle="matrixPill"
-      title={isOwned ? 'Đã sở hữu · Bấm để bỏ dấu tích' : 'Chưa sở hữu · Bấm để đánh dấu'}
+      title={isOwned ? 'Owned · Click to unmark' : 'Not owned · Click to mark as owned'}
       type="button"
-      unstyled
+      variant="stat"
     >
       {line.label}
       {line.isUnique && (
@@ -33,11 +30,7 @@ export function StatPill({ line, slot, isOwned, onToggle }: StatPillProps) {
           Unique
         </Box>
       )}
-      {isOwned && (
-        <Box aria-hidden="true" as="span" className={styles.check} color="matrix.s.fg">
-          ✓
-        </Box>
-      )}
+      <Icon aria-hidden="true" as={FiCheck} boxSize={3} flexShrink={0} opacity={isOwned ? 1 : 0} />
     </Button>
   )
 }

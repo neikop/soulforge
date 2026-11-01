@@ -16,8 +16,8 @@ export function useProgress() {
       toaster.create({
         id: 'checklist-storage',
         type: 'warning',
-        title: 'Trình duyệt không cho phép lưu tiến độ.',
-        description: 'Các dấu tích hiện chỉ được giữ trong phiên đang mở.',
+        title: 'This browser cannot save progress.',
+        description: 'Your progress will only last for this session.',
       })
     }
   }, [progress])

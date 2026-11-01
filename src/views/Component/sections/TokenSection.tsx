@@ -218,7 +218,7 @@ const usageCards = [
 
 export function TokenSection() {
   return (
-    <Stack gap={5} id="tokens" scrollMarginTop="12px">
+    <Stack gap={5} id="tokens" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Tokens"
         subtitle="The current theme exposes a compact neutral base plus semantic families that now power both app-level styling and Chakra recipe `colorPalette` behavior."
@@ -250,8 +250,9 @@ export function TokenSection() {
       <DocsCard title="Neutral Defaults">
         <Stack gap={3}>
           <Text textStyle="body">
-            The Soulforge matrix uses feature-local components and semantic matrix tokens. Labels use normal weight;
-            headings and tiers use mid. Each palette has light and dark mappings.
+            Soul Binding and Genus Insight share the same panel, table, tab and control recipes. Priority colors use
+            matrix tokens; all other surfaces use the neutral theme. Titles use bold, labels use mid and supporting text
+            uses normal.
           </Text>
           <HStack flexWrap="wrap" gap={3}>
             {(['top', 's', 'aplus', 'a', 'percent', 'pvp'] as const).map((tone) => (

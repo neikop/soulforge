@@ -23,7 +23,7 @@ export function SharedUiSection() {
   const [densities, setDensities] = useState(['comfortable'])
 
   return (
-    <Stack gap={5} id="shared-ui" scrollMarginTop="12px">
+    <Stack gap={5} id="shared-ui" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Shared UI"
         subtitle="These wrappers own reusable interaction policy while labels, state and domain decisions stay with the consuming feature."

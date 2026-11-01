@@ -1,4 +1,4 @@
-import { Badge, Button, EmptyState, HStack, Stack, Table, Text } from '@chakra-ui/react'
+import { Badge, Box, Button, EmptyState, HStack, Stack, Table, Text } from '@chakra-ui/react'
 import { FiInbox } from 'react-icons/fi'
 
 import { DocsCard, SectionHeading } from '../shared'
@@ -11,12 +11,41 @@ const products = [
 
 export function TableSection() {
   return (
-    <Stack gap={5} id="tables" scrollMarginTop="12px">
+    <Stack gap={5} id="tables" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Tables"
         subtitle="The theme owns density, typography and boundaries. Features still own columns, row actions, sorting and responsive overflow."
         title="Keep data tables semantic and structurally stable."
       />
+
+      <DocsCard title="Planner matrix">
+        <Text color="fg.muted" textStyle="body">
+          Both planners use the matrix variant with shared headers, cell spacing and tier colors.
+        </Text>
+        <Box layerStyle="tableContainer">
+          <Table.Root aria-label="Planner matrix example" minW="full" variant="matrix">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader scope="col">Slot</Table.ColumnHeader>
+                <Table.ColumnHeader scope="col">Core stat</Table.ColumnHeader>
+                <Table.ColumnHeader scope="col">Secondary stat</Table.ColumnHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <Table.Row>
+                <Table.ColumnHeader scope="row">Slot 1</Table.ColumnHeader>
+                <Table.Cell data-tone="top">S+</Table.Cell>
+                <Table.Cell data-tone="s">S</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.ColumnHeader scope="row">Slot 2</Table.ColumnHeader>
+                <Table.Cell data-tone="aplus">A+</Table.Cell>
+                <Table.Cell data-tone="a">A</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table.Root>
+        </Box>
+      </DocsCard>
 
       <DocsCard title="Default interactive table">
         <Stack gap={2}>

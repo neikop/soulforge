@@ -1,88 +1,143 @@
-import { Badge, Box, Button, Container, Grid, HStack, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Grid, HStack, Image, Skeleton, Stack, Text } from '@chakra-ui/react'
 import { ColorModeButton } from 'components/app'
-import { FiBox, FiHome } from 'react-icons/fi'
+import { Suspense } from 'react'
+import { FiBookOpen, FiCheckSquare, FiGrid } from 'react-icons/fi'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { appRoutes } from 'routes'
 
-const navItems = [
-  { icon: FiHome, ...appRoutes.home },
-  { icon: FiBox, ...appRoutes.components },
+const NAV_ITEMS = [
+  { icon: FiGrid, label: 'Soul Binding', path: appRoutes.home.path },
+  { icon: FiCheckSquare, label: appRoutes.genusInsight.label, path: appRoutes.genusInsight.path },
 ]
 
-const AppLayout = () => {
-  const location = useLocation()
+/** Shared app shell with persistent planner navigation, theme controls and a responsive workspace. */
+export default function AppLayout() {
+  const { pathname } = useLocation()
+  const activeNavIndex = NAV_ITEMS.findIndex(({ path }) => pathname === path)
 
   return (
-    <Grid background="bg.subtle" minH="100vh" templateColumns={{ base: '1fr', lg: '240px minmax(0, 1fr)' }}>
+    <Box bg="bg.page" color="fg.default" minH="100vh">
       <Box
-        background="bg.canvas"
-        borderRightWidth={{ base: 0, lg: 1 }}
-        display={{ base: 'none', lg: 'block' }}
-        px={4}
-        py={6}
+        _print={{ display: 'none' }}
+        as="header"
+        bg="bg.page"
+        borderBottomColor="border.default"
+        borderBottomWidth="1px"
+        position="sticky"
+        top={0}
+        zIndex="sticky"
       >
-        <Stack gap={6} position="sticky" top={6}>
-          <Stack gap={1}>
-            <Text color="primary.main" textStyle="meta">
-              Soulforge
-            </Text>
-            <Text textStyle="title">Component guide</Text>
-          </Stack>
+        <Flex
+          align="center"
+          columnGap={{ base: 4, md: 10 }}
+          flexWrap="wrap"
+          maxW="workspace"
+          mx="auto"
+          px={{ base: 3, md: 5, lg: 6 }}
+          py={{ base: 3, md: 4 }}
+          rowGap={3}
+        >
+          <HStack gap={3}>
+            <Image alt="" boxSize={10} flexShrink={0} src="/soulforge.svg" />
+            <Stack gap={0}>
+              <Text textStyle="title">Soulforge</Text>
+              <Text color="fg.muted" textStyle="bodyCompact">
+                AION 2 · PvE Planner
+              </Text>
+            </Stack>
+          </HStack>
 
-          <Stack gap={1}>
-            {navItems.map(({ icon: Icon, label, path }) => {
-              const active = path === '/' ? location.pathname === path : location.pathname.startsWith(path)
+          <Grid
+            aria-label="Soulforge navigation"
+            as="nav"
+            bg="bg.subtle"
+            borderColor="border.default"
+            borderRadius="md"
+            borderWidth="1px"
+            order={{ base: 3, md: 2 }}
+            p={1}
+            templateColumns={`repeat(${NAV_ITEMS.length}, minmax(0, 1fr))`}
+            w={{ base: 'full', md: 'auto' }}
+          >
+            <Box
+              _motionReduce={{ transition: 'none' }}
+              aria-hidden="true"
+              bg="primary.subtle"
+              borderRadius="sm"
+              gridArea="1 / 1"
+              opacity={activeNavIndex < 0 ? 0 : 1}
+              pointerEvents="none"
+              transform={`translateX(${activeNavIndex * 100}%)`}
+              transitionDuration="moderate"
+              transitionProperty="transform"
+              transitionTimingFunction="ease-in-out"
+            />
+            {NAV_ITEMS.map(({ icon: ItemIcon, label, path }, index) => {
+              const isActive = pathname === path
 
               return (
                 <Button
+                  _active={{ bg: 'primary.solid', color: 'primary.contrast' }}
+                  _focusVisible={{ outlineColor: 'primary.focusRing' }}
+                  _hover={{ bg: 'bg.hover', color: 'fg.default' }}
                   asChild
-                  colorPalette={active ? 'primary' : 'gray'}
-                  justifyContent="flex-start"
+                  bg="transparent"
+                  color={isActive ? 'primary.fg' : 'fg.muted'}
+                  gridArea={`1 / ${index + 1}`}
                   key={path}
-                  variant={active ? 'subtle' : 'ghost'}
+                  position="relative"
+                  variant="ghost"
                 >
-                  <NavLink to={path}>
-                    <Icon />
+                  <NavLink end to={path}>
+                    <ItemIcon aria-hidden="true" />
                     {label}
                   </NavLink>
                 </Button>
               )
             })}
-          </Stack>
-        </Stack>
-      </Box>
-
-      <Box minW={0}>
-        <HStack
-          background="bg.canvas"
-          borderBottomWidth={1}
-          display={{ base: 'flex', lg: 'none' }}
-          justify="space-between"
-          px={4}
-          py={3}
-        >
-          <Text textStyle="title">Soulforge</Text>
-          <HStack gap={1}>
-            {navItems.map(({ label, path }) => (
-              <Button asChild key={path} size="sm" variant="ghost">
-                <NavLink to={path}>{label}</NavLink>
-              </Button>
-            ))}
-          </HStack>
-        </HStack>
-
-        <Container px={{ base: 4, md: 6 }} py={{ base: 6, md: 10 }}>
-          <HStack justify="flex-end" mb={5}>
-            <Badge colorPalette="success" variant="subtle">
-              React 19 · Vite 8
-            </Badge>
+          </Grid>
+          <HStack gap={1} ml="auto" order={{ base: 2, md: 3 }}>
+            <Button
+              aria-label="Component guide"
+              asChild
+              color={pathname === appRoutes.components.path ? 'primary.fg' : 'fg.muted'}
+              size="sm"
+              title="Component guide"
+              variant="ghost"
+            >
+              <NavLink to={appRoutes.components.path}>
+                <FiBookOpen aria-hidden="true" />
+                <Text as="span" display={{ base: 'none', lg: 'inline' }}>
+                  Components
+                </Text>
+              </NavLink>
+            </Button>
             <ColorModeButton />
           </HStack>
-          <Outlet />
-        </Container>
+        </Flex>
       </Box>
-    </Grid>
+
+      <Box
+        _print={{ p: 0 }}
+        as="main"
+        maxW="workspace"
+        minW={0}
+        mx="auto"
+        pb={12}
+        pt={{ base: 5, md: 7 }}
+        px={{ base: 3, md: 5, lg: 6 }}
+      >
+        <Suspense
+          fallback={
+            <Stack aria-busy="true" aria-label="Loading page" gap={6} minH="60vh" role="status">
+              <Skeleton h={24} />
+              <Skeleton h="60vh" />
+            </Stack>
+          }
+        >
+          <Outlet />
+        </Suspense>
+      </Box>
+    </Box>
   )
 }
-
-export default AppLayout

@@ -26,7 +26,7 @@ export function OverlaySection() {
   }
 
   return (
-    <Stack gap={5} id="overlays" scrollMarginTop="12px">
+    <Stack gap={5} id="overlays" scrollMarginTop="28">
       <SectionHeading
         eyebrow="Overlays"
         subtitle="DialogContent and DrawerContent provide one portal, backdrop, positioner and close-control composition while Chakra Root owns state, focus and dismissal."
