@@ -1,10 +1,20 @@
 import { Box, Button, chakra, Checkbox, HStack, SimpleGrid, Stack, Tabs, Text } from '@chakra-ui/react'
 import { useState } from 'react'
+import { FiCompass, FiMoon, FiSun } from 'react-icons/fi'
 
 import { DocsCard, SectionHeading } from '../shared'
 
+const ZONE_CARD_EXAMPLES = [
+  { key: 'verteron', name: 'Verteron', faction: 'Elyos', icon: FiSun, tone: 'primary' },
+  { key: 'poeta', name: 'Poeta', faction: 'Elyos', icon: FiSun, tone: 'primary' },
+  { key: 'altgard', name: 'Altgard', faction: 'Asmodian', icon: FiMoon, tone: 'error' },
+  { key: 'ishalgen', name: 'Ishalgen', faction: 'Asmodian', icon: FiMoon, tone: 'error' },
+  { key: 'reshanta', name: 'Chaotic Lower Reshanta', faction: 'Abyss', icon: FiCompass, tone: 'info' },
+] as const
+
 export function OverviewSection() {
   const [selectedStats, setSelectedStats] = useState<Record<string, boolean>>({ owned: true })
+  const [selectedZone, setSelectedZone] = useState('altgard')
 
   function handleToggleStat(key: string) {
     setSelectedStats((previous) => ({ ...previous, [key]: !previous[key] }))
@@ -105,6 +115,51 @@ export function OverviewSection() {
         </SimpleGrid>
       </DocsCard>
       <DocsCard title="Map surfaces">
+        <Stack gap={2} mb={3}>
+          <Text color="fg.subtle" textStyle="meta">
+            Zone card selector
+          </Text>
+          <SimpleGrid columns={2} gap={2}>
+            {ZONE_CARD_EXAMPLES.map((item) => {
+              const isSelected = selectedZone === item.key
+              const Icon = item.icon
+              return (
+                <Button
+                  aria-pressed={isSelected}
+                  key={item.key}
+                  layerStyle="mapZoneOption"
+                  onClick={() => setSelectedZone(item.key)}
+                  {...(isSelected
+                    ? { bg: 'bg.elevated', borderColor: 'primary.fg' }
+                    : { borderColor: 'border.default' })}
+                >
+                  <HStack align="center" gap={2} minW={0} width="full">
+                    <Box
+                      aria-hidden="true"
+                      bg={`${item.tone}.subtle`}
+                      borderColor={`${item.tone}.border`}
+                      borderRadius="full"
+                      borderWidth="1px"
+                      color={`${item.tone}.fg`}
+                      flexShrink={0}
+                      layerStyle="mapZoneIcon"
+                    >
+                      <Icon />
+                    </Box>
+                    <Stack gap={0} minW={0}>
+                      <Text overflow="hidden" textOverflow="ellipsis" textStyle="actionCompact" whiteSpace="nowrap">
+                        {item.name}
+                      </Text>
+                      <Text color="fg.muted" textStyle="bodyCompact">
+                        {item.faction}
+                      </Text>
+                    </Stack>
+                  </HStack>
+                </Button>
+              )
+            })}
+          </SimpleGrid>
+        </Stack>
         <Box height="180px" layerStyle="mapShell" position="relative">
           <Box height="full" layerStyle="mapStage" tabIndex={0}>
             <Box

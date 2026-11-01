@@ -3,12 +3,20 @@ import type { MapRow } from 'services/map'
 import { Badge, Box, Button, chakra, Flex, HStack, Input, Stack, Text } from '@chakra-ui/react'
 import { ChakraSelect } from 'components/select'
 import { FileUploadField, Switch, toaster } from 'components/ui'
+import { type KeyboardEvent, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { FiDownload, FiEye, FiEyeOff, FiSearch, FiX } from 'react-icons/fi'
+import { FiCompass, FiDownload, FiEye, FiEyeOff, FiMoon, FiSearch, FiSun, FiX } from 'react-icons/fi'
 
 import type { useMapProgress } from './useMapProgress'
 
 import { KIND_LABELS, MAP_GROUPS, MAP_ZONES, PET_LAYERS, rowLayer, rowName, type ZoneKey } from './data'
+
+const ZONE_ICONS = { Abyss: FiCompass, Asmodian: FiMoon, Elyos: FiSun } as const
+const ZONE_TONES = {
+  Abyss: { bg: 'info.subtle', border: 'info.border', fg: 'info.fg' },
+  Asmodian: { bg: 'error.subtle', border: 'error.border', fg: 'error.fg' },
+  Elyos: { bg: 'primary.subtle', border: 'primary.border', fg: 'primary.fg' },
+} as const
 
 type MapSidebarProps = {
   canJump: boolean
@@ -40,6 +48,7 @@ export default function MapSidebar({
   onJump,
 }: MapSidebarProps) {
   const { preferences, updatePreferences } = progress
+  const zoneButtonRefs = useRef<Array<HTMLButtonElement | null>>([])
   const form = useForm({ defaultValues: { profileName: '', presetName: '' } })
   const layerCounts = new Map<string, number>()
   for (const row of rows) layerCounts.set(rowLayer(row), (layerCounts.get(rowLayer(row)) || 0) + 1)
@@ -57,20 +66,83 @@ export default function MapSidebar({
     { name: 'None', layers: [] },
   ]
 
+  function handleZoneKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let nextIndex: number | undefined
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      nextIndex = (index + 1) % MAP_ZONES.length
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      nextIndex = (index - 1 + MAP_ZONES.length) % MAP_ZONES.length
+    } else if (event.key === 'Home') {
+      nextIndex = 0
+    } else if (event.key === 'End') {
+      nextIndex = MAP_ZONES.length - 1
+    }
+    if (nextIndex === undefined) return
+    event.preventDefault()
+    const nextZone = MAP_ZONES[nextIndex]
+    if (!nextZone) return
+    onZone(nextZone.key)
+    zoneButtonRefs.current[nextIndex]?.focus()
+  }
+
   return (
     <Stack aria-label="Map controls" as="aside" gap={4} height="full" minH={0} overflowY="auto" p={3}>
       <Stack gap={2}>
         <Text as="h2" textStyle="meta">
           Zone
         </Text>
-        <ChakraSelect
+        <Box
           aria-label="Map zone"
-          onChange={onZone}
-          options={MAP_ZONES.map((zone) => ({ value: zone.key, label: `${zone.name} · ${zone.faction}` }))}
-          placeholder="Choose a zone"
-          size="sm"
-          value={zone}
-        />
+          display="grid"
+          gap={2}
+          gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+          role="radiogroup"
+        >
+          {MAP_ZONES.map((item, index) => {
+            const isSelected = item.key === zone
+            const Icon = ZONE_ICONS[item.faction]
+            const tone = ZONE_TONES[item.faction]
+            return (
+              <Button
+                aria-checked={isSelected}
+                aria-label={`${item.name}, ${item.faction}`}
+                key={item.key}
+                layerStyle="mapZoneOption"
+                onClick={() => onZone(item.key)}
+                onKeyDown={(event) => handleZoneKeyDown(event, index)}
+                ref={(element) => {
+                  zoneButtonRefs.current[index] = element
+                }}
+                role="radio"
+                tabIndex={isSelected ? 0 : -1}
+                {...(isSelected ? { bg: 'bg.elevated', borderColor: 'primary.fg' } : { borderColor: 'border.default' })}
+              >
+                <HStack align="center" gap={2} minW={0} width="full">
+                  <Box
+                    aria-hidden="true"
+                    bg={tone.bg}
+                    borderColor={tone.border}
+                    borderRadius="full"
+                    borderWidth="1px"
+                    color={tone.fg}
+                    flexShrink={0}
+                    layerStyle="mapZoneIcon"
+                  >
+                    <Icon />
+                  </Box>
+                  <Stack gap={0} minW={0}>
+                    <Text overflow="hidden" textOverflow="ellipsis" textStyle="actionCompact" whiteSpace="nowrap">
+                      {item.name}
+                    </Text>
+                    <Text color="fg.muted" textStyle="bodyCompact">
+                      {item.faction}
+                    </Text>
+                  </Stack>
+                </HStack>
+              </Button>
+            )
+          })}
+        </Box>
       </Stack>
       <Stack gap={2}>
         <chakra.label htmlFor="map-search" textStyle="meta">
