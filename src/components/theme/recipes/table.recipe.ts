@@ -45,6 +45,23 @@ export const tableRecipe = defineSlotRecipe({
     },
   },
   variants: {
+    layout: {
+      grid: {
+        root: {
+          display: 'grid',
+          gridTemplateColumns: '{sizes.matrixSlot} repeat(var(--table-data-columns), minmax(0, 1fr))',
+        },
+        header: { display: 'contents' },
+        body: { display: 'contents' },
+        row: {
+          display: 'grid',
+          gridColumn: '1 / -1',
+          gridTemplateColumns: 'subgrid',
+        },
+        columnHeader: { minW: 0 },
+        cell: { display: 'grid', alignItems: 'stretch', minW: 0 },
+      },
+    },
     interactive: {
       true: {
         body: {

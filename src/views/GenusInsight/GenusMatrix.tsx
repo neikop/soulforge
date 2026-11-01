@@ -16,13 +16,12 @@ export function GenusMatrix({ boardCounts, completedLines, onCompletedChange }: 
       role="region"
       tabIndex={0}
     >
-      <Table.Root aria-label="Genus Insight targets and rolls to keep" variant="matrix">
-        <colgroup>
-          <Box as="col" w="matrixSlot" />
-          {GENUS_BOARDS.map((board) => (
-            <col key={board.id} />
-          ))}
-        </colgroup>
+      <Table.Root
+        aria-label="Genus Insight targets and rolls to keep"
+        css={{ '--table-data-columns': GENUS_BOARDS.length }}
+        layout="grid"
+        variant="matrix"
+      >
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader scope="col">Slot / Priority</Table.ColumnHeader>
@@ -56,9 +55,8 @@ export function GenusMatrix({ boardCounts, completedLines, onCompletedChange }: 
                 const isCompleted = completedLines[line.key] === true
                 const { tone } = GENUS_TIERS[line.tier]
 
-                // A definite cell height lets the checkbox fill the tallest content in its table row.
                 return (
-                  <Table.Cell h="1px" key={line.key} p={2}>
+                  <Table.Cell key={line.key} p={2}>
                     <Checkbox.Root
                       checked={isCompleted}
                       data-tier={line.tier}

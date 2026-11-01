@@ -27,7 +27,6 @@ export const checkboxRecipe = defineSlotRecipe({
           color: 'var(--tier-fg)',
           cursor: 'pointer',
           gap: 2,
-          h: 'full',
           p: 3,
           w: 'full',
           _hover: { bg: 'var(--tier-hover)', borderColor: 'primary.border' },

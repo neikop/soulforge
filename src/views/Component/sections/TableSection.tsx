@@ -1,4 +1,4 @@
-import { Badge, Box, Button, EmptyState, HStack, Stack, Table, Text } from '@chakra-ui/react'
+import { Badge, Box, Button, Checkbox, EmptyState, HStack, Stack, Table, Text } from '@chakra-ui/react'
 import { FiInbox } from 'react-icons/fi'
 
 import { DocsCard, SectionHeading } from '../shared'
@@ -20,10 +20,16 @@ export function TableSection() {
 
       <DocsCard title="Planner matrix">
         <Text color="fg.muted" textStyle="body">
-          Both planners use the matrix variant with shared headers, cell spacing and tier colors.
+          Both planners use the matrix variant. Grid layout keeps target controls equal in height as content wraps.
         </Text>
         <Box layerStyle="tableContainer">
-          <Table.Root aria-label="Planner matrix example" minW="full" variant="matrix">
+          <Table.Root
+            aria-label="Planner matrix example"
+            css={{ '--table-data-columns': 2 }}
+            layout="grid"
+            minW="full"
+            variant="matrix"
+          >
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader scope="col">Slot</Table.ColumnHeader>
@@ -34,8 +40,24 @@ export function TableSection() {
             <Table.Body>
               <Table.Row>
                 <Table.ColumnHeader scope="row">Slot 1</Table.ColumnHeader>
-                <Table.Cell data-tone="top">S+</Table.Cell>
-                <Table.Cell data-tone="s">S</Table.Cell>
+                {(['top', 's'] as const).map((tone, index) => (
+                  <Table.Cell key={tone}>
+                    <Checkbox.Root data-tone={tone} size="sm" variant="target">
+                      <Checkbox.HiddenInput />
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                      <Checkbox.Label>
+                        {index === 0 ? 'Core stat · S+' : 'Secondary stat · S'}
+                        {index === 0 && (
+                          <Text as="span" textStyle="bodyCompact">
+                            Longer guidance sets the height for every target in this row.
+                          </Text>
+                        )}
+                      </Checkbox.Label>
+                    </Checkbox.Root>
+                  </Table.Cell>
+                ))}
               </Table.Row>
               <Table.Row>
                 <Table.ColumnHeader scope="row">Slot 2</Table.ColumnHeader>

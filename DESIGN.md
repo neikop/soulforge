@@ -174,6 +174,8 @@ Before creating or promoting a common component, choose the smallest correct abs
   detailed guidance behind a disclosure when needed.
 - Use `panel`, `tableContainer` and `tierCard` layer styles for shared surfaces. Use the `matrix` table, `planner` tabs,
   `stat` button and `target` checkbox variants for the planner UI.
+- Tables with target cards use `layout="grid"` and set `--table-data-columns` to their data-column count. Subgrid aligns
+  columns and stretches cards within each row; do not force percentage heights inside native table cells.
 - Keep neutral colors in `semantic-palettes.json` and priority colors in `matrix-palette.json`. Feature styles must not
   redefine those colors or duplicate recipe interaction states.
 - Product labels, instructions, tooltips and feedback use concise English. Preserve in-game stat names and stored
