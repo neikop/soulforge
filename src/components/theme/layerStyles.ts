@@ -1,8 +1,10 @@
 import { defineLayerStyles } from '@chakra-ui/react'
 
+import { mapStyles } from './mapStyles'
 import { matrixToneStyles } from './matrixStyles'
 
 export const layerStyles = defineLayerStyles({
+  ...mapStyles,
   panel: {
     value: { bg: 'bg.canvas', borderWidth: '1px', borderRadius: 'lg' },
   },

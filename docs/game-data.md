@@ -6,14 +6,16 @@ conventions belong in [DESIGN.md](../DESIGN.md); the development workflow belong
 
 ## Data ownership
 
-| Module                                       | Owns                                                                              |
-| -------------------------------------------- | --------------------------------------------------------------------------------- |
-| `src/views/Soulforge/data.ts`                | Gear slots, stat pools, matrix ratings, stat groups and Bracelet recommendations. |
-| `src/views/Soulforge/types.ts`               | Soul Binding data shapes, tiers, tones and stored tab identifiers.                |
-| `src/views/Soulforge/progress.ts`            | Soul Binding storage keys, parsing and legacy-key migrations.                     |
-| `src/views/Soulforge/useProgress.ts`         | Soul Binding interaction state and browser persistence.                           |
-| `src/views/GenusInsight/data.ts`             | Board definitions, slot targets, priorities, tiers and completion keys.           |
-| `src/views/GenusInsight/useGenusProgress.ts` | Independent board progress, derived counts and browser persistence.               |
+| Module                                       | Owns                                                                                  |
+| -------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `src/views/Soulforge/data.ts`                | Gear slots, stat pools, matrix ratings, stat groups and Bracelet recommendations.     |
+| `src/views/Soulforge/types.ts`               | Soul Binding data shapes, tiers, tones and stored tab identifiers.                    |
+| `src/views/Soulforge/progress.ts`            | Soul Binding storage keys, parsing and legacy-key migrations.                         |
+| `src/views/Soulforge/useProgress.ts`         | Soul Binding interaction state and browser persistence.                               |
+| `src/views/GenusInsight/data.ts`             | Board definitions, slot targets, priorities, tiers and completion keys.               |
+| `src/views/GenusInsight/useGenusProgress.ts` | Independent board progress, derived counts and browser persistence.                   |
+| `src/views/InteractiveMap/`                  | Map camera, clustering, layer filters, progress/import and server timer presentation. |
+| `src/services/map.ts`, `public/map/`         | Local map HTTP boundary, immutable snapshot and attribution/hash manifest.            |
 
 Keep definitions in these modules rather than copying pools, targets or counts into JSX or shared UI. The data modules
 are authoritative for current values; this document records their contract and evidence, not a second target matrix.
@@ -43,11 +45,13 @@ are authoritative for current values; this document records their contract and e
 
 ## Browser progress
 
-| Storage key                        | Value                                                                             | Owner                                  |
-| ---------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------- |
-| `aion2.gladiator.gear-owned.v1`    | Record of stat keys and boolean ownership values.                                 | Soul Binding progress parser and hook. |
-| `aion2.gladiator.active-tab.v1`    | `dps`, `basic` or `bracelet`; `basic` is displayed as Gear List.                  | Soul Binding progress parser and hook. |
-| `aion2.genus-insight.completed.v1` | Record of recognized board/slot keys whose value is `true`, such as `special\|4`. | Genus progress hook.                   |
+| Storage key                            | Value                                                                                        | Owner                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `aion2.gladiator.gear-owned.v1`        | Record of stat keys and boolean ownership values.                                            | Soul Binding progress parser and hook. |
+| `aion2.gladiator.active-tab.v1`        | `dps`, `basic` or `bracelet`; `basic` is displayed as Gear List.                             | Soul Binding progress parser and hook. |
+| `aion2.genus-insight.completed.v1`     | Record of recognized board/slot keys whose value is `true`, such as `special\|4`.            | Genus progress hook.                   |
+| `aion2.senseos.completed-pet-types.v1` | `{version:1, completed:[{name,at}]}`; legacy Console tracker format, normalized by pet type. | Interactive Map.                       |
+| `aion2.soulforge.map.v1`               | Versioned map settings, characters with done IDs, custom pins and presets.                   | Interactive Map.                       |
 
 Progress remains local to the browser origin. `localhost`, `127.0.0.1`, different ports and deployment domains do not
 share localStorage. To transfer progress manually, export the values of the relevant keys from the old origin, set
@@ -73,6 +77,49 @@ keys, merge the two paired items or reset stored progress. Add a deliberate migr
 stored identifier actually needs to change.
 
 ## Sources and limitations
+
+### Interactive Map
+
+The `/interactive-map` renderer is an independent React implementation. It uses local assets rather than embedding or
+running SenseOS application code. The snapshot dated **2026-11-01** contains 8,806 places and 428 pet rows:
+
+| Zone                   | Places |                     Pet rows | Background                        |
+| ---------------------- | -----: | ---------------------------: | --------------------------------- |
+| Verteron               |  4,131 | 217 (109 distinct pet types) | Image + 256 high-resolution tiles |
+| Altgard                |  4,032 |                          182 | Image + 256 high-resolution tiles |
+| Chaotic Lower Reshanta |    623 |                           29 | Image + 256 high-resolution tiles |
+| Poeta                  |      7 |                            0 | Regional outlines only            |
+| Ishalgen               |     13 |                            0 | Regional outlines only            |
+
+Pet completion uses `row.f.p.n`, normalized with NFKC, trimmed/collapsed whitespace and case folding. Monster names and
+spawn IDs do not split a pet type: completing Sylphen completes all its named variants across zones. Group arcs count
+completed pet rows; **Hide pets done** removes only entirely completed pet-only groups. Partial/mixed groups and the
+current selection stay visible. Ordinary place completion uses stable row IDs per character and the separate **Hide
+done** setting. Custom pins and saved layer presets are local to the origin.
+
+Export produces `{format:"soulforge-map", version:1, preferences, petProgress}`. Import validates the whole backup before
+applying it, replaces map preferences and merges completed pet types. Legacy `{version:1,completed:[{name,at}]}` JSON is
+also accepted, without replacing map settings. Invalid pet storage is preserved and pet toggles are blocked until a
+valid backup is imported. Save failures keep current-session state and show a warning. No SenseOS-origin storage is
+read automatically. Export on the old tracker and import on Soulforge to transfer progress.
+
+`public/map/source.json` records exact source URLs, snapshot counts, SHA-256 hashes and rights. Source data credits
+[SenseOS](https://senseos.gg/wiki/aion-2/interactive-map/),
+[Yihao Liu / aion2-interactive-map](https://github.com/aion2-interactive-map/aion2-interactive-map) and
+[jonboy648 / aion2-companion](https://github.com/jonboy648/aion2-companion), under
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Preserve attribution and the noncommercial restriction.
+Boss/pet spawn data credits [SkeeveAN](https://github.com/SkeeveAN/Aion-DPS-Meter). Map art belongs to NC; sharp tiles,
+portraits and community drop rates are sourced through [MetaBot.GG](https://metabot.gg/en/aion-2/monsters). No independent
+artwork license grant was verified. Upstream application source has a separate GPL-3.0 license; it is not distributed
+here. The snapshot changes formatting/hosting and adds Soulforge's own rendering and progress behavior.
+
+Schedules use the snapshot's IANA server timezones (Asia defaults to Asia/Tokyo) and are advisory community data, as are
+drop percentages. They were not verified against a specific current client build. Poeta/Ishalgen image gaps are shown
+explicitly; the renderer does not fabricate missing maps. Coordinates, names and drops can drift with game updates.
+
+To update data and restore missing images, run `node scripts/sync-map-data.mjs`. Images are cached; add `--refresh` to
+redownload all images too. Review resulting counts, attribution and source changes, then run `pnpm test:map` and the standard gate.
+The sync tool validates safe local paths and WebP signatures, limits concurrency, retries and caches existing files.
 
 The entries below preserve the evidence recorded during earlier data work. This documentation reorganization does not
 revalidate those sources or establish that every pool matches the latest game patch.

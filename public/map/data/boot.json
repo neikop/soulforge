@@ -1,0 +1,98 @@
+{
+  "timers": [
+    {
+      "id": "spacetime-rift",
+      "name": "Spacetime Rift",
+      "kind": "pvp",
+      "rule": {
+        "type": "daily",
+        "clock": "server",
+        "at": ["02:00", "05:00", "08:00", "11:00", "14:00", "17:00", "20:00", "23:00"]
+      },
+      "minutes": 60,
+      "portal": 10,
+      "level": 45,
+      "alertDefault": true,
+      "line": "A portal to the other faction's land opens for 10 minutes; inside, one hour of cross-faction PvP, sealed dungeons and quests.",
+      "about": [
+        "Abyss Points for kills and the rift quests",
+        "Uru's four quests: about 21,000 to 58,000 Kina and 2,000 Abyss Points each, plus a ring, earrings, a bracelet and titles",
+        "Sealed Dungeons and Strongholds on the other side: quick, small drops",
+        "Field bosses over there drop gear for skins or supply requests",
+        "Stay longer with Spacetime Rift Duration Tickets (10 or 30 minutes)"
+      ],
+      "confidence": "unsettled"
+    },
+    {
+      "id": "watcher-kaira",
+      "name": "Watcher Kaira",
+      "kind": "boss",
+      "rule": {
+        "type": "daily",
+        "clock": "server",
+        "at": ["01:00", "04:00", "07:00", "10:00", "13:00", "16:00", "19:00", "22:00"]
+      },
+      "minutes": 30,
+      "level": 65,
+      "alertDefault": true,
+      "line": "Lower Abyss field boss, every three hours at a random spot in the Black Fragments Area (Abandoned Island).",
+      "about": [
+        "The Kaira set: helm, pauldrons, greaves, gloves, boots, cloak, necklace, earrings, ring, and the item level 62 Kaira Breastplate",
+        "Proof of Hero (Kaira): 5 for ranks 1 to 3, down to 1 from rank 31",
+        "Abyss Points by contribution"
+      ],
+      "confidence": "agreed"
+    },
+    {
+      "id": "siege-bosses",
+      "name": "Siege bosses",
+      "kind": "boss",
+      "rule": { "type": "weekly", "clock": "server", "days": [1, 4, 6], "at": ["21:30"] },
+      "minutes": 30,
+      "level": 65,
+      "alertDefault": true,
+      "line": "Right after the Artifact Siege: Executors Tamasa, Argo and Kaira in the Lower Abyss.",
+      "about": [
+        "Materials that make a Dimensional Merit Chest",
+        "The chests can hold Potential Stone: Abyss (Unique or Heroic)",
+        "Abyss Points by contribution"
+      ],
+      "confidence": "agreed"
+    },
+    {
+      "id": "guardian-nahma",
+      "name": "Guardian Lord Nahma",
+      "kind": "boss",
+      "rule": { "type": "weekly", "clock": "server", "days": [5, 0], "at": ["21:00"] },
+      "minutes": 30,
+      "level": 65,
+      "alertDefault": true,
+      "line": "Guardian Lord Nahma rises in the Lower Abyss.",
+      "about": [
+        "The Fallen Ancient God set, item level 46, greatsword included",
+        "Refining Stone on every kill",
+        "Proof of Hero (Nahma): 10 for rank 1, down to 1 from rank 101",
+        "Abyss Points by contribution"
+      ],
+      "confidence": "agreed"
+    }
+  ],
+  "clocks": {
+    "reset": "Asia/Seoul",
+    "server": {
+      "nae": "America/New_York",
+      "naw": "America/Los_Angeles",
+      "eu": "Europe/Berlin",
+      "la": "America/Sao_Paulo",
+      "as": "Asia/Tokyo"
+    }
+  },
+  "tasks": {
+    "expedition-conquest": "Expedition: Conquest",
+    "spacetime-rift": "Spacetime Rift",
+    "tsenka-hidden-cube-key": "Key: Hidden Cube (Tsenka Merchants)",
+    "expedition-exploration": "Expedition: Exploration",
+    "daeva-pass-exp": "Daeva Pass EXP (Dawn Legion / Ishalgen Mercenary)",
+    "planets-call-exp": "Planet's Call EXP"
+  }
+}

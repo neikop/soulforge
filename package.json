@@ -21,7 +21,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty false",
     "prepare": "husky",
-    "test:matrix": "node --experimental-strip-types --test scripts/progress.test.mjs"
+    "test:matrix": "node --experimental-strip-types --test scripts/progress.test.mjs",
+    "test:map": "node --experimental-strip-types --test scripts/map.test.mjs"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.36.1",

@@ -1,13 +1,14 @@
 import { Box, Button, Flex, Grid, HStack, Image, Skeleton, Stack, Text } from '@chakra-ui/react'
 import { ColorModeButton } from 'components/app'
 import { Suspense } from 'react'
-import { FiBookOpen, FiCheckSquare, FiGrid } from 'react-icons/fi'
+import { FiBookOpen, FiCheckSquare, FiGrid, FiMap } from 'react-icons/fi'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { appRoutes } from 'routes'
 
 const NAV_ITEMS = [
   { icon: FiGrid, label: 'Soul Binding', path: appRoutes.home.path },
   { icon: FiCheckSquare, label: appRoutes.genusInsight.label, path: appRoutes.genusInsight.path },
+  { icon: FiMap, label: appRoutes.interactiveMap.label, path: appRoutes.interactiveMap.path },
 ]
 
 /** Shared app shell with persistent planner navigation, theme controls and a responsive workspace. */
