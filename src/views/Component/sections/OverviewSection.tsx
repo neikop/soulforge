@@ -107,37 +107,46 @@ export function OverviewSection() {
       <DocsCard title="Map surfaces">
         <Box height="180px" layerStyle="mapShell" position="relative">
           <Box height="full" layerStyle="mapStage" tabIndex={0}>
-            <chakra.button aria-label="Example map marker" layerStyle="mapMarker" left="20%" top="50%" type="button">
-              <Box as="span" layerStyle="mapGroupBadge">
-                2
-              </Box>
-              <chakra.svg
-                aria-hidden="true"
-                height="40px"
-                left="-3px"
-                position="absolute"
-                top="-3px"
-                viewBox="0 0 40 40"
-                width="40px"
-              >
-                <chakra.circle
-                  cx="20"
-                  cy="20"
-                  fill="none"
-                  pathLength={100}
-                  r="18"
-                  stroke="warning.solid"
-                  strokeDasharray="50 100"
-                  strokeWidth="3"
-                  transform="rotate(-90 20 20)"
-                />
-              </chakra.svg>
-            </chakra.button>
-            <Box layerStyle="mapSpawn" left="35%" top="65%" />
+            <Box
+              css={{ '--map-inverse-scale': 0.8 }}
+              height="full"
+              layerStyle="mapWorld"
+              transform="scale(1.25)"
+              transformOrigin="0 0"
+              width="full"
+            >
+              <chakra.button aria-label="Example map marker" layerStyle="mapMarker" left="20%" top="50%" type="button">
+                <Box as="span" layerStyle="mapGroupBadge">
+                  2
+                </Box>
+                <chakra.svg
+                  aria-hidden="true"
+                  height="40px"
+                  left="-3px"
+                  position="absolute"
+                  top="-3px"
+                  viewBox="0 0 40 40"
+                  width="40px"
+                >
+                  <chakra.circle
+                    cx="20"
+                    cy="20"
+                    fill="none"
+                    pathLength={100}
+                    r="18"
+                    stroke="warning.solid"
+                    strokeDasharray="50 100"
+                    strokeWidth="3"
+                    transform="rotate(-90 20 20)"
+                  />
+                </chakra.svg>
+              </chakra.button>
+              <Box layerStyle="mapSpawn" left="35%" top="65%" />
+            </Box>
             <Box layerStyle="mapCard" maxW="55%" p={3} position="absolute" right={3} top={3}>
               <Text textStyle="titleCompact">Map details</Text>
               <Text color="fg.muted" textStyle="bodyCompact">
-                Fixed-size markers, amber progress arcs and an 80% background.
+                Markers and spawn points keep their size as the map scales. Amber arcs show partial progress.
               </Text>
             </Box>
           </Box>

@@ -5,6 +5,7 @@ export type Viewport = { height: number; width: number }
 export type MapCluster = { id: string; rows: MapRow[]; x: number; y: number }
 export const MIN_ZOOM = 0.5
 export const MAX_ZOOM = 10
+export const MAP_RENDER_MARGIN = 256
 export const petKey = (name: string) => name.normalize('NFKC').trim().replace(/\s+/gu, ' ').toLocaleLowerCase('en-US')
 export const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
@@ -40,22 +41,9 @@ export function zoomCamera(
   }
 }
 
-export function clusterRows(
-  rows: MapRow[],
-  camera: Camera,
-  viewport: Viewport,
-  canvas: number,
-  selected = '',
-): MapCluster[] {
-  const scale = cameraScale(camera, viewport, canvas)
-  const margin = 80 / scale
-  const worldLeft = camera.x - viewport.width / 2 / scale - margin
-  const worldRight = camera.x + viewport.width / 2 / scale + margin
-  const worldTop = camera.y - viewport.height / 2 / scale - margin
-  const worldBottom = camera.y + viewport.height / 2 / scale + margin
+export function clusterRows(rows: MapRow[], scale: number, selected = ''): MapCluster[] {
   const groups = new Map<string, MapRow[]>()
   for (const row of rows) {
-    if (row.x < worldLeft || row.x > worldRight || row.y < worldTop || row.y > worldBottom) continue
     const id =
       row.i === selected
         ? `selected:${row.i}`
@@ -70,6 +58,36 @@ export function clusterRows(
     x: members.reduce((sum, row) => sum + row.x, 0) / members.length,
     y: members.reduce((sum, row) => sum + row.y, 0) / members.length,
   }))
+}
+
+export function isPointVisible(
+  x: number,
+  y: number,
+  camera: Camera,
+  viewport: Viewport,
+  canvas: number,
+  margin = MAP_RENDER_MARGIN,
+) {
+  const point = toScreen(x, y, camera, viewport, canvas)
+  return (
+    point.x >= -margin &&
+    point.x <= viewport.width + margin &&
+    point.y >= -margin &&
+    point.y <= viewport.height + margin
+  )
+}
+
+// Keep moving the mounted scene until its buffered coverage or cluster scale needs refreshing.
+export function needsCameraRender(current: Camera, rendered: Camera, viewport: Viewport, canvas: number) {
+  if (current === rendered) return false
+  const ratio = current.zoom / rendered.zoom
+  if (ratio < 0.875 || ratio > 1.125) return true
+  const topLeft = toCanvas(-80, -80, current, viewport, canvas)
+  const bottomRight = toCanvas(viewport.width + 80, viewport.height + 80, current, viewport, canvas)
+  return (
+    !isPointVisible(topLeft.x, topLeft.y, rendered, viewport, canvas) ||
+    !isPointVisible(bottomRight.x, bottomRight.y, rendered, viewport, canvas)
+  )
 }
 
 export function clusterProgress(rows: MapRow[], completed: Record<string, string>) {

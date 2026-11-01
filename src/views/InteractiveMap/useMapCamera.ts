@@ -1,39 +1,88 @@
-import { type KeyboardEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  type KeyboardEvent,
+  type PointerEvent,
+  startTransition,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 
-import { type Camera, cameraScale, clamp, toCanvas, type Viewport, zoomCamera } from './mapLogic'
+import {
+  type Camera,
+  cameraScale,
+  clamp,
+  needsCameraRender,
+  toCanvas,
+  toScreen,
+  type Viewport,
+  zoomCamera,
+} from './mapLogic'
 
 export function useMapCamera(canvas: number, initialFocus?: { x: number; y: number }) {
   const stageRef = useRef<HTMLDivElement>(null)
+  const worldRef = useRef<HTMLDivElement>(null)
+  const coordinatesRef = useRef<HTMLParagraphElement>(null)
   const [viewport, setViewport] = useState<Viewport>({ width: 800, height: 600 })
+  const viewportRef = useRef(viewport)
   const [camera, setCamera] = useState<Camera>(() => ({
     x: initialFocus?.x ?? canvas / 2,
     y: initialFocus?.y ?? canvas / 2,
     zoom: initialFocus ? 4 : 1,
   }))
   const cameraRef = useRef(camera)
+  const renderedCameraRef = useRef(camera)
   const frameRef = useRef<null | number>(null)
-  const pendingCameraRef = useRef(camera)
-  const [coordinates, setCoordinates] = useState<null | { x: number; y: number }>(null)
-  const pendingCoordinatesRef = useRef<null | { x: number; y: number }>(null)
+  const settleRef = useRef<null | ReturnType<typeof setTimeout>>(null)
+  const pointerRef = useRef<null | { x: number; y: number }>(null)
+  const paintedViewRef = useRef<null | { camera: Camera; viewport: Viewport }>(null)
   const gesture = useRef({ points: new Map<number, { x: number; y: number }>(), moved: false, suppressUntil: 0 })
 
   const scheduleFrame = useCallback(() => {
     if (frameRef.current !== null) return
     frameRef.current = requestAnimationFrame(() => {
       frameRef.current = null
-      cameraRef.current = pendingCameraRef.current
-      setCamera(pendingCameraRef.current)
-      setCoordinates(pendingCoordinatesRef.current)
+      const current = cameraRef.current
+      const size = viewportRef.current
+      const scale = cameraScale(current, size, canvas)
+      const origin = toScreen(0, 0, current, size, canvas)
+      const painted = paintedViewRef.current
+      if (worldRef.current && (painted?.camera !== current || painted.viewport !== size)) {
+        worldRef.current.style.transform = `translate3d(${origin.x}px, ${origin.y}px, 0) scale(${scale})`
+        const inverseScale = String(1 / scale)
+        if (worldRef.current.style.getPropertyValue('--map-inverse-scale') !== inverseScale)
+          worldRef.current.style.setProperty('--map-inverse-scale', inverseScale)
+        paintedViewRef.current = { camera: current, viewport: size }
+      }
+      if (coordinatesRef.current) {
+        const pointer = pointerRef.current
+        const coordinates = pointer ? toCanvas(pointer.x, pointer.y, current, size, canvas) : null
+        const label = coordinates ? `${Math.round(coordinates.x)}, ${Math.round(coordinates.y)}` : ''
+        if (coordinatesRef.current.textContent !== label) coordinatesRef.current.textContent = label
+      }
+      if (needsCameraRender(current, renderedCameraRef.current, size, canvas)) {
+        startTransition(() => setCamera(current))
+      }
     })
-  }, [])
+  }, [canvas])
+
+  useLayoutEffect(() => {
+    renderedCameraRef.current = camera
+    scheduleFrame()
+  }, [camera, viewport, scheduleFrame])
 
   const updateCamera = useCallback(
     (update: ((current: Camera) => Camera) | Camera) => {
       const current = cameraRef.current
       const next = typeof update === 'function' ? update(current) : update
       cameraRef.current = next
-      pendingCameraRef.current = next
       scheduleFrame()
+      if (settleRef.current !== null) clearTimeout(settleRef.current)
+      settleRef.current = setTimeout(() => {
+        settleRef.current = null
+        startTransition(() => setCamera(cameraRef.current))
+      }, 120)
     },
     [scheduleFrame],
   )
@@ -41,6 +90,10 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
   useEffect(
     () => () => {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current)
+      if (settleRef.current !== null) clearTimeout(settleRef.current)
+      frameRef.current = null
+      settleRef.current = null
+      paintedViewRef.current = null
     },
     [],
   )
@@ -48,7 +101,12 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
-    const observer = new ResizeObserver(() => setViewport({ width: stage.clientWidth, height: stage.clientHeight }))
+    const observer = new ResizeObserver(() => {
+      const next = { width: stage.clientWidth, height: stage.clientHeight }
+      if (next.width === viewportRef.current.width && next.height === viewportRef.current.height) return
+      viewportRef.current = next
+      setViewport(next)
+    })
     observer.observe(stage)
     return () => observer.disconnect()
   }, [])
@@ -56,7 +114,7 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
     const stage = stageRef.current
     if (!stage) return
     const handleWheel = (event: WheelEvent) => {
-      if (event.target instanceof Element && event.target.closest('[data-map-control]')) return
+      if (event.target instanceof Element && event.target.closest('[data-map-control]:not([data-row])')) return
       event.preventDefault()
       const rect = stage.getBoundingClientRect()
       const delta =
@@ -90,7 +148,7 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
     const g = gesture.current,
       p = point(event)
-    pendingCoordinatesRef.current = toCanvas(p.x, p.y, cameraRef.current, viewport, canvas)
+    pointerRef.current = p
     scheduleFrame()
     const previous = g.points.get(event.pointerId)
     if (!previous) return
@@ -126,6 +184,11 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
     if (gesture.current.points.delete(event.pointerId) && gesture.current.moved)
       gesture.current.suppressUntil = performance.now() + 250
   }
+  function handlePointerLeave() {
+    if (gesture.current.points.size) return
+    pointerRef.current = null
+    scheduleFrame()
+  }
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.target !== event.currentTarget || event.ctrlKey || event.altKey || event.metaKey) return
     if (['+', '-', '=', '_'].includes(event.key)) {
@@ -133,7 +196,7 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
       zoom(['+', '='].includes(event.key) ? Math.SQRT2 : 1 / Math.SQRT2)
     } else if (event.key.startsWith('Arrow')) {
       event.preventDefault()
-      const amount = (event.shiftKey ? 240 : 90) / cameraScale(camera, viewport, canvas)
+      const amount = (event.shiftKey ? 240 : 90) / cameraScale(cameraRef.current, viewport, canvas)
       updateCamera((current) => ({
         ...current,
         x: clamp(
@@ -159,9 +222,11 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
   }
   return {
     stageRef,
+    worldRef,
+    coordinatesRef,
     viewport,
     camera,
-    coordinates,
+    toCanvas: (x: number, y: number) => toCanvas(x, y, cameraRef.current, viewportRef.current, canvas),
     zoom,
     fit,
     jump,
@@ -171,6 +236,8 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
       onPointerMove: handlePointerMove,
       onPointerUp: handlePointerUp,
       onPointerCancel: handlePointerUp,
+      onLostPointerCapture: handlePointerUp,
+      onPointerLeave: handlePointerLeave,
       onKeyDown: handleKeyDown,
     },
   }

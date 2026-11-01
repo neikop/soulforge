@@ -15,7 +15,7 @@ export const mapStyles = {
   },
   mapWorld: {
     value: {
-      contain: 'layout paint',
+      contain: 'layout style',
       pointerEvents: 'none',
       willChange: 'transform',
     },
@@ -34,7 +34,8 @@ export const mapStyles = {
       color: 'fg.default',
       boxShadow: 'md',
       cursor: 'pointer',
-      transform: 'translate(-50%, -50%)',
+      pointerEvents: 'auto',
+      transform: 'translate(-50%, -50%) scale(var(--map-inverse-scale, 1))',
       _hover: { bg: 'bg.hover', borderColor: 'primary.fg', zIndex: 3 },
       _active: { bg: 'primary.subtle' },
       _focusVisible: { outline: '2px solid', outlineColor: 'primary.focusRing', outlineOffset: '3px', zIndex: 4 },
@@ -73,7 +74,7 @@ export const mapStyles = {
       borderWidth: '1px',
       borderColor: 'fg.inverse',
       pointerEvents: 'none',
-      transform: 'translate(-50%, -50%)',
+      transform: 'translate(-50%, -50%) scale(var(--map-inverse-scale, 1))',
       boxShadow: 'sm',
     },
   },
@@ -88,7 +89,7 @@ export const mapStyles = {
       textStyle: 'actionCompact',
       whiteSpace: 'nowrap',
       pointerEvents: 'none',
-      transform: 'translate(-50%, -50%)',
+      transform: 'translate(-50%, -50%) scale(var(--map-inverse-scale, 1))',
     },
   },
 } as const

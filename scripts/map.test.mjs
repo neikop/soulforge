@@ -4,8 +4,11 @@ import { test } from 'node:test'
 
 import { MAP_ZONES, rowImage } from '../src/views/InteractiveMap/data.ts'
 import {
+  cameraScale,
   clusterProgress,
   clusterRows,
+  isPointVisible,
+  needsCameraRender,
   parseCoordinates,
   petKey,
   selectedSpawns,
@@ -125,8 +128,9 @@ test('camera transforms roundtrip, zoom stays anchored and clamps at 10x', () =>
   assert.ok(Math.abs(before.x - after.x) < 1e-8 && Math.abs(before.y - after.y) < 1e-8)
   assert.equal(zoomCamera(camera, 100, 500, 350, viewport, 8192).zoom, 10)
   assert.equal(zoomCamera(camera, 0.001, 500, 350, viewport, 8192).zoom, 0.5)
-  assert.equal(clusterRows([pet('a', 'A'), pet('b', 'B')], camera, viewport, 8192).length, 1)
-  assert.equal(clusterRows([pet('a', 'A'), pet('b', 'B')], camera, viewport, 8192, 'a').length, 2)
+  const scale = cameraScale(camera, viewport, 8192)
+  assert.equal(clusterRows([pet('a', 'A'), pet('b', 'B')], scale).length, 1)
+  assert.equal(clusterRows([pet('a', 'A'), pet('b', 'B')], scale, 'a').length, 2)
   assert.deepEqual(parseCoordinates('4096, 4096', 8192), { x: 4096, y: 4096 })
   for (const query of ['-1,2', '8193,2', '1,2,3', 'abc']) assert.equal(parseCoordinates(query, 8192), null)
   assert.deepEqual(
@@ -146,6 +150,52 @@ test('camera transforms roundtrip, zoom stays anchored and clamps at 10x', () =>
       [3, 4],
     ],
   )
+})
+
+test('buffered scene covers small pans and refreshes before visible markers leave mounted coverage', () => {
+  for (const viewport of [
+    { width: 390, height: 700 },
+    { width: 1200, height: 800 },
+    { width: 3840, height: 2160 },
+  ]) {
+    for (const zoom of [0.5, 1, 4, 10]) {
+      const rendered = { x: 4096, y: 4096, zoom }
+      const scale = cameraScale(rendered, viewport, 8192)
+      assert.equal(needsCameraRender({ ...rendered }, rendered, viewport, 8192), false)
+      assert.equal(needsCameraRender({ ...rendered, x: rendered.x + 90 / scale }, rendered, viewport, 8192), false)
+      assert.equal(needsCameraRender({ ...rendered, y: rendered.y - 300 / scale }, rendered, viewport, 8192), true)
+      assert.equal(needsCameraRender({ ...rendered, zoom: zoom * 1.2 }, rendered, viewport, 8192), true)
+      for (const dx of [-150, 0, 150]) {
+        for (const dy of [-150, 0, 150]) {
+          const current = { x: rendered.x + dx / scale, y: rendered.y + dy / scale, zoom: zoom * 0.95 }
+          if (needsCameraRender(current, rendered, viewport, 8192)) continue
+          for (const [x, y] of [
+            [-80, -80],
+            [viewport.width + 80, viewport.height + 80],
+          ]) {
+            const point = toCanvas(x, y, current, viewport, 8192)
+            assert.equal(isPointVisible(point.x, point.y, rendered, viewport, 8192), true)
+          }
+        }
+      }
+    }
+  }
+})
+
+test('panning never changes cluster membership or centroid at a viewport edge', () => {
+  const viewport = { width: 1000, height: 700 }
+  const camera = { x: 4096, y: 4096, zoom: 4 }
+  const scale = cameraScale(camera, viewport, 8192)
+  const edge = toCanvas(-250, 350, camera, viewport, 8192)
+  const rows = [pet('a', 'A', 'Sylphen', edge.x, edge.y), pet('b', 'B', 'Tog', edge.x + 1, edge.y)]
+  const [cluster] = clusterRows(rows, scale)
+  assert.equal(cluster.rows.length, 2)
+  assert.equal(cluster.x, edge.x + 0.5)
+  assert.equal(isPointVisible(cluster.x, cluster.y, camera, viewport, 8192), true)
+  assert.equal(isPointVisible(cluster.x, cluster.y, camera, viewport, 8192, 0), false)
+  const panned = { ...camera, x: camera.x + 300 / scale }
+  assert.equal(isPointVisible(cluster.x, cluster.y, panned, viewport, 8192), false)
+  assert.deepEqual(clusterRows(rows, cameraScale(panned, viewport, 8192)), [cluster])
 })
 
 test('timers follow server timezone, midnight windows and Sunday weekly rollover', () => {

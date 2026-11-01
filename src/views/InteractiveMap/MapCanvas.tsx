@@ -9,11 +9,12 @@ import {
   cameraScale,
   clusterProgress,
   clusterRows,
+  isPointVisible,
+  MAP_RENDER_MARGIN,
   MAX_ZOOM,
   MIN_ZOOM,
   selectedSpawns,
   toCanvas,
-  toScreen,
 } from './mapLogic'
 import { useMapCamera } from './useMapCamera'
 
@@ -60,18 +61,20 @@ const MapCanvas = forwardRef<MapCanvasHandle, MapCanvasProps>(function MapCanvas
   const { camera, viewport } = view
   useImperativeHandle(ref, () => ({ jump: view.jump, fit: view.fit }))
   const scale = cameraScale(camera, viewport, zone.canvas)
-  const origin = toScreen(0, 0, camera, viewport, zone.canvas)
   const selectedId = selected.length === 1 ? selected[0]?.i || '' : ''
-  const clusters = useMemo(
-    () => clusterRows(rows, camera, viewport, zone.canvas, selectedId),
-    [rows, camera, viewport, zone.canvas, selectedId],
-  )
+  const clusters = useMemo(() => clusterRows(rows, scale, selectedId), [rows, scale, selectedId])
   const spawns = useMemo(() => selectedSpawns(selected), [selected])
   const useTiles = Boolean(zone.image && camera.zoom > 1.4)
   const tiles: { x: number; y: number }[] = []
   const tileSize = zone.canvas / 16
-  const corner = toCanvas(0, 0, camera, viewport, zone.canvas)
-  const end = toCanvas(viewport.width, viewport.height, camera, viewport, zone.canvas)
+  const corner = toCanvas(-MAP_RENDER_MARGIN, -MAP_RENDER_MARGIN, camera, viewport, zone.canvas)
+  const end = toCanvas(
+    viewport.width + MAP_RENDER_MARGIN,
+    viewport.height + MAP_RENDER_MARGIN,
+    camera,
+    viewport,
+    zone.canvas,
+  )
   if (useTiles)
     for (let y = Math.max(0, Math.floor(corner.y / tileSize)); y <= Math.min(15, Math.floor(end.y / tileSize)); y++) {
       for (let x = Math.max(0, Math.floor(corner.x / tileSize)); x <= Math.min(15, Math.floor(end.x / tileSize)); x++)
@@ -92,7 +95,7 @@ const MapCanvas = forwardRef<MapCanvasHandle, MapCanvasProps>(function MapCanvas
         if (event.target instanceof Element && event.target.closest('[data-map-control]')) return
         event.preventDefault()
         const rect = event.currentTarget.getBoundingClientRect()
-        const point = toCanvas(event.clientX - rect.left, event.clientY - rect.top, camera, viewport, zone.canvas)
+        const point = view.toCanvas(event.clientX - rect.left, event.clientY - rect.top)
         if (point.x >= 0 && point.y >= 0 && point.x <= zone.canvas && point.y <= zone.canvas) onSpot(point)
       }}
       onDoubleClick={(event) => {
@@ -105,17 +108,17 @@ const MapCanvas = forwardRef<MapCanvasHandle, MapCanvasProps>(function MapCanvas
       {...view.handlers}
     >
       <Box
-        aria-hidden="true"
         height={`${zone.canvas}px`}
         layerStyle="mapWorld"
         left={0}
         pointerEvents="none"
         position="absolute"
-        style={{ transform: `translate(${origin.x}px, ${origin.y}px) scale(${scale})`, transformOrigin: '0 0' }}
+        ref={view.worldRef}
         top={0}
+        transformOrigin="0 0"
         width={`${zone.canvas}px`}
       >
-        {zone.image && !useTiles && (
+        {zone.image && (
           <Image
             alt=""
             decoding="async"
@@ -158,133 +161,134 @@ const MapCanvas = forwardRef<MapCanvasHandle, MapCanvasProps>(function MapCanvas
                   key={region.key}
                   stroke="primary.fg"
                   strokeOpacity={0.6}
-                  strokeWidth={1 / scale}
+                  strokeWidth={1}
+                  vectorEffect="non-scaling-stroke"
                 />
               ))}
           </chakra.svg>
         )}
-      </Box>
-      {areaNames &&
-        data.regions
-          .filter((region) => !region.outline && !region.instance)
-          .map((region) => {
-            const point = toScreen(region.label[0], region.label[1], camera, viewport, zone.canvas)
-            if (point.x < 0 || point.x > viewport.width || point.y < 0 || point.y > viewport.height) return null
-            return (
-              <Box
-                aria-hidden="true"
-                key={region.key}
-                layerStyle="mapAreaLabel"
-                left={`${point.x}px`}
-                top={`${point.y}px`}
-              >
-                {region.name}
-              </Box>
-            )
-          })}
-      {spawns.map(([x, y]) => {
-        const point = toScreen(x, y, camera, viewport, zone.canvas)
-        return (
-          <Box
-            aria-hidden="true"
-            data-testid="spawn-point"
-            key={`${x}:${y}`}
-            layerStyle="mapSpawn"
-            left={`${point.x}px`}
-            top={`${point.y}px`}
-          />
-        )
-      })}
-      {clusters.map((cluster) => {
-        const progress = clusterProgress(cluster.rows, completed)
-        const isSelected = cluster.rows.some((row) => selected.some((value) => value.i === row.i))
-        if (hidePetsDone && progress.hidden && !isSelected) return null
-        const point = toScreen(cluster.x, cluster.y, camera, viewport, zone.canvas)
-        const first = cluster.rows[0]
-        if (!first) return null
-        const label = cluster.rows.length > 1 ? `${cluster.rows.length} places · ${rowName(first)}` : rowName(first)
-        return (
-          <chakra.button
-            aria-label={label}
-            aria-pressed={isSelected}
-            borderColor={isSelected ? 'primary.fg' : undefined}
-            data-cluster-size={cluster.rows.length}
-            data-map-control=""
-            data-pet-progress={progress.total ? `${progress.done}/${progress.total}` : undefined}
-            data-row={first.i}
-            key={cluster.id}
-            layerStyle="mapMarker"
-            left={`${point.x}px`}
-            onClick={() => {
-              if (view.canClick()) onCluster(cluster.rows)
-            }}
-            title={label}
-            top={`${point.y}px`}
-            type="button"
-            zIndex={isSelected ? 4 : 1}
-          >
-            <Image
-              alt=""
-              borderRadius="full"
-              boxSize="full"
-              draggable={false}
-              objectFit="contain"
-              src={rowImage(first)}
+        {areaNames &&
+          data.regions
+            .filter((region) => !region.outline && !region.instance)
+            .map((region) => {
+              if (!isPointVisible(region.label[0], region.label[1], camera, viewport, zone.canvas)) return null
+              return (
+                <Box
+                  aria-hidden="true"
+                  key={region.key}
+                  layerStyle="mapAreaLabel"
+                  left={`${region.label[0]}px`}
+                  top={`${region.label[1]}px`}
+                >
+                  {region.name}
+                </Box>
+              )
+            })}
+        {spawns.map(([x, y]) => {
+          if (!isPointVisible(x, y, camera, viewport, zone.canvas)) return null
+          return (
+            <Box
+              aria-hidden="true"
+              data-testid="spawn-point"
+              key={`${x}:${y}`}
+              layerStyle="mapSpawn"
+              left={`${x}px`}
+              top={`${y}px`}
             />
-            {progress.done > 0 && (
-              <chakra.svg
-                aria-hidden="true"
-                height="40px"
-                left="-3px"
-                overflow="visible"
-                pointerEvents="none"
-                position="absolute"
-                top="-3px"
-                viewBox="0 0 40 40"
-                width="40px"
-              >
-                <chakra.circle
-                  cx="20"
-                  cy="20"
-                  fill="none"
-                  pathLength={100}
-                  r="18"
-                  stroke="warning.solid"
-                  strokeDasharray={`${(progress.done / progress.total) * 100} 100`}
-                  strokeWidth="3"
-                  transform="rotate(-90 20 20)"
-                />
-              </chakra.svg>
-            )}
-            {cluster.rows.length > 1 && (
-              <Box as="span" layerStyle="mapGroupBadge">
-                {cluster.rows.length}
-              </Box>
-            )}
-            {names && (
-              <Box
-                as="span"
-                bg="bg.elevated/80"
-                borderRadius="sm"
-                color="fg.default"
-                left="50%"
-                maxW="180px"
-                overflow="hidden"
-                pointerEvents="none"
-                position="absolute"
-                px={1}
-                textOverflow="ellipsis"
-                textStyle="actionCompact"
-                top="calc(100% + 4px)"
-                transform="translateX(-50%)"
-                whiteSpace="nowrap"
-              >
-                {cluster.rows.length > 1 ? `${cluster.rows.length} places` : rowName(first)}
-              </Box>
-            )}
-          </chakra.button>
-        )
-      })}
+          )
+        })}
+        {clusters.map((cluster) => {
+          if (!isPointVisible(cluster.x, cluster.y, camera, viewport, zone.canvas)) return null
+          const progress = clusterProgress(cluster.rows, completed)
+          const isSelected = cluster.rows.some((row) => selected.some((value) => value.i === row.i))
+          if (hidePetsDone && progress.hidden && !isSelected) return null
+          const first = cluster.rows[0]
+          if (!first) return null
+          const label = cluster.rows.length > 1 ? `${cluster.rows.length} places · ${rowName(first)}` : rowName(first)
+          return (
+            <chakra.button
+              aria-label={label}
+              aria-pressed={isSelected}
+              borderColor={isSelected ? 'primary.fg' : undefined}
+              data-cluster-size={cluster.rows.length}
+              data-map-control=""
+              data-pet-progress={progress.total ? `${progress.done}/${progress.total}` : undefined}
+              data-row={first.i}
+              key={cluster.id}
+              layerStyle="mapMarker"
+              left={`${cluster.x}px`}
+              onClick={() => {
+                if (view.canClick()) onCluster(cluster.rows)
+              }}
+              tabIndex={isPointVisible(cluster.x, cluster.y, camera, viewport, zone.canvas, 0) ? 0 : -1}
+              title={label}
+              top={`${cluster.y}px`}
+              type="button"
+              zIndex={isSelected ? 4 : 1}
+            >
+              <Image
+                alt=""
+                borderRadius="full"
+                boxSize="full"
+                draggable={false}
+                objectFit="contain"
+                src={rowImage(first)}
+              />
+              {progress.done > 0 && (
+                <chakra.svg
+                  aria-hidden="true"
+                  height="40px"
+                  left="-3px"
+                  overflow="visible"
+                  pointerEvents="none"
+                  position="absolute"
+                  top="-3px"
+                  viewBox="0 0 40 40"
+                  width="40px"
+                >
+                  <chakra.circle
+                    cx="20"
+                    cy="20"
+                    fill="none"
+                    pathLength={100}
+                    r="18"
+                    stroke="warning.solid"
+                    strokeDasharray={`${(progress.done / progress.total) * 100} 100`}
+                    strokeWidth="3"
+                    transform="rotate(-90 20 20)"
+                  />
+                </chakra.svg>
+              )}
+              {cluster.rows.length > 1 && (
+                <Box as="span" layerStyle="mapGroupBadge">
+                  {cluster.rows.length}
+                </Box>
+              )}
+              {names && (
+                <Box
+                  as="span"
+                  bg="bg.elevated/80"
+                  borderRadius="sm"
+                  color="fg.default"
+                  left="50%"
+                  maxW="180px"
+                  overflow="hidden"
+                  pointerEvents="none"
+                  position="absolute"
+                  px={1}
+                  textOverflow="ellipsis"
+                  textStyle="actionCompact"
+                  top="calc(100% + 4px)"
+                  transform="translateX(-50%)"
+                  whiteSpace="nowrap"
+                >
+                  {cluster.rows.length > 1 ? `${cluster.rows.length} places` : rowName(first)}
+                </Box>
+              )}
+            </chakra.button>
+          )
+        })}
+      </Box>
       <Button
         aria-label={isExpanded ? 'Exit full size' : 'Full size'}
         aria-pressed={isExpanded}
@@ -372,22 +376,20 @@ const MapCanvas = forwardRef<MapCanvasHandle, MapCanvasProps>(function MapCanvas
           {rows.length.toLocaleString()} places · {spawns.length} spawn points
         </Text>
       </Stack>
-      {view.coordinates && (
-        <Text
-          aria-hidden="true"
-          bg="bg.elevated/80"
-          borderRadius="sm"
-          bottom={3}
-          color="fg.default"
-          p={1}
-          pointerEvents="none"
-          position="absolute"
-          right={3}
-          textStyle="bodyCompact"
-        >
-          {Math.round(view.coordinates.x)}, {Math.round(view.coordinates.y)}
-        </Text>
-      )}
+      <Text
+        _empty={{ display: 'none' }}
+        aria-hidden="true"
+        bg="bg.elevated/80"
+        borderRadius="sm"
+        bottom={3}
+        color="fg.default"
+        p={1}
+        pointerEvents="none"
+        position="absolute"
+        ref={view.coordinatesRef}
+        right={3}
+        textStyle="bodyCompact"
+      />
       {children}
     </Box>
   )

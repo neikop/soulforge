@@ -111,5 +111,8 @@ is per character. Export/import under **Character, presets & backups** transfers
 the earlier Console tracker's JSON. SenseOS storage cannot be read automatically from another origin. See the
 [map data and progress contract](docs/game-data.md#interactive-map) for source licenses and update instructions.
 
+Camera movement updates a transformed map layer once per animation frame. Markers keep their screen size, reuse
+clusters while panning and render beyond the viewport edges. The overview image stays beneath buffered tiles as they load.
+
 The app started from [neikop/vite-2026](https://github.com/neikop/vite-2026), snapshot
 `7f9d385e3d7d8262c2b56a8be8473abc3ef90652`, with independent Git history.
