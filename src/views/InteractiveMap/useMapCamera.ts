@@ -13,6 +13,7 @@ import {
   type Camera,
   cameraScale,
   clamp,
+  MAX_ZOOM,
   needsCameraRender,
   toCanvas,
   toScreen,
@@ -20,7 +21,7 @@ import {
   zoomCamera,
 } from './mapLogic'
 
-export function useMapCamera(canvas: number, initialFocus?: { x: number; y: number }) {
+export function useMapCamera(canvas: number, initialFocus?: { x: number; y: number }, maxZoom = MAX_ZOOM) {
   const stageRef = useRef<HTMLDivElement>(null)
   const worldRef = useRef<HTMLDivElement>(null)
   const coordinatesRef = useRef<HTMLParagraphElement>(null)
@@ -127,12 +128,13 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
           event.clientY - rect.top,
           viewport,
           canvas,
+          maxZoom,
         ),
       )
     }
     stage.addEventListener('wheel', handleWheel, { passive: false })
     return () => stage.removeEventListener('wheel', handleWheel)
-  }, [canvas, updateCamera, viewport])
+  }, [canvas, maxZoom, updateCamera, viewport])
 
   function point(event: PointerEvent<HTMLDivElement>) {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -143,6 +145,7 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
     const g = gesture.current
     if (!g.points.size) g.moved = false
     g.points.set(event.pointerId, point(event))
+    event.currentTarget.dataset.dragging = ''
     event.currentTarget.setPointerCapture(event.pointerId)
   }
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
@@ -165,7 +168,7 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
       const dx = (after[0].x + after[1].x) / 2 - cx,
         dy = (after[0].y + after[1].y) / 2 - cy
       updateCamera((current) => {
-        const next = zoomCamera(current, distanceAfter / Math.max(1, distanceBefore), cx, cy, viewport, canvas)
+        const next = zoomCamera(current, distanceAfter / Math.max(1, distanceBefore), cx, cy, viewport, canvas, maxZoom)
         const scale = cameraScale(next, viewport, canvas)
         return { ...next, x: clamp(next.x - dx / scale, 0, canvas), y: clamp(next.y - dy / scale, 0, canvas) }
       })
@@ -183,6 +186,7 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
   function handlePointerUp(event: PointerEvent<HTMLDivElement>) {
     if (gesture.current.points.delete(event.pointerId) && gesture.current.moved)
       gesture.current.suppressUntil = performance.now() + 250
+    if (!gesture.current.points.size) delete event.currentTarget.dataset.dragging
   }
   function handlePointerLeave() {
     if (gesture.current.points.size) return
@@ -212,7 +216,9 @@ export function useMapCamera(canvas: number, initialFocus?: { x: number; y: numb
     }
   }
   function zoom(factor: number) {
-    updateCamera((current) => zoomCamera(current, factor, viewport.width / 2, viewport.height / 2, viewport, canvas))
+    updateCamera((current) =>
+      zoomCamera(current, factor, viewport.width / 2, viewport.height / 2, viewport, canvas, maxZoom),
+    )
   }
   function fit() {
     updateCamera({ x: canvas / 2, y: canvas / 2, zoom: 1 })

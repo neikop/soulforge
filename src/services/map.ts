@@ -1,5 +1,7 @@
 import { apiClient } from './client'
 
+export type MapPet = { c: string; i: string; n: string }
+
 export type MapRow = {
   a?: number
   c?: string[]
@@ -10,7 +12,7 @@ export type MapRow = {
     mon?: string
     no?: number
     npc?: number
-    p?: { c: string; i: string; n: string }
+    p?: MapPet
     pts?: [number, number][]
     q?: string
     s?: string
@@ -25,6 +27,7 @@ export type MapRow = {
   t?: string
   x: number
   y: number
+  zone?: string
 }
 
 export type MapRegion = {
@@ -46,10 +49,10 @@ export type MapTimer = {
 }
 export type MapBoot = {
   clocks: { reset: string; server: Record<string, string> }
+  pets: MapPet[]
   tasks: Record<string, string>
   timers: MapTimer[]
 }
-export type MapDrops = { items: Record<string, [string, string]>; npcs: Record<string, [number, number][]> }
 
 function isMapRow(value: unknown): value is MapRow {
   if (!value || typeof value !== 'object') return false
@@ -76,10 +79,5 @@ export async function fetchMapZone(zone: string, signal?: AbortSignal): Promise<
 
 export async function fetchMapBoot(signal?: AbortSignal): Promise<MapBoot> {
   const { data } = await apiClient.get<MapBoot>('/map/data/boot.json', { baseURL: '/', signal })
-  return data
-}
-
-export async function fetchMapDrops(signal?: AbortSignal): Promise<MapDrops> {
-  const { data } = await apiClient.get<MapDrops>('/map/data/drops.json', { baseURL: '/', signal })
   return data
 }

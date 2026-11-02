@@ -45,13 +45,13 @@ are authoritative for current values; this document records their contract and e
 
 ## Browser progress
 
-| Storage key                            | Value                                                                                        | Owner                                  |
-| -------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------- |
-| `aion2.gladiator.gear-owned.v1`        | Record of stat keys and boolean ownership values.                                            | Soul Binding progress parser and hook. |
-| `aion2.gladiator.active-tab.v1`        | `dps`, `basic` or `bracelet`; `basic` is displayed as Gear List.                             | Soul Binding progress parser and hook. |
-| `aion2.genus-insight.completed.v1`     | Record of recognized board/slot keys whose value is `true`, such as `special\|4`.            | Genus progress hook.                   |
-| `aion2.senseos.completed-pet-types.v1` | `{version:1, completed:[{name,at}]}`; legacy Console tracker format, normalized by pet type. | Interactive Map.                       |
-| `aion2.soulforge.map.v1`               | Versioned map settings, characters with done IDs, custom pins and presets.                   | Interactive Map.                       |
+| Storage key                            | Value                                                                                             | Owner                                  |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `aion2.gladiator.gear-owned.v1`        | Record of stat keys and boolean ownership values.                                                 | Soul Binding progress parser and hook. |
+| `aion2.gladiator.active-tab.v1`        | `dps`, `basic` or `bracelet`; `basic` is displayed as Gear List.                                  | Soul Binding progress parser and hook. |
+| `aion2.genus-insight.completed.v1`     | Record of recognized board/slot keys whose value is `true`, such as `special\|4`.                 | Genus progress hook.                   |
+| `aion2.senseos.completed-pet-types.v1` | `{version:1, completed:[{name,at}]}`; legacy Console tracker format, normalized by pet type.      | Interactive Map.                       |
+| `aion2.soulforge.map.v1`               | Versioned map settings, highlighted pet types, characters with done IDs, custom pins and presets. | Interactive Map.                       |
 
 Progress remains local to the browser origin. `localhost`, `127.0.0.1`, different ports and deployment domains do not
 share localStorage. To transfer progress manually, export the values of the relevant keys from the old origin, set
@@ -91,11 +91,37 @@ running SenseOS application code. The snapshot dated **2026-11-01** contains 8,8
 | Poeta                  |      7 |                            0 | Regional outlines only            |
 | Ishalgen               |     13 |                            0 | Regional outlines only            |
 
+The default **World map** is a presentation of the three imaged zones, not an additional source snapshot. Chaotic
+Abyss (the Lower Reshanta snapshot) sits above Verteron on the left and Altgard on the right. Their centers form an
+equilateral triangle, and the three backgrounds have equal display sizes. This is an app layout, not a claim about
+in-game geography. The five individual zone views remain available.
+
+World composition transforms marker coordinates, spawn points, region outlines and labels together. Original marker
+IDs and pet-type keys stay unchanged, so completion and highlights apply in both views. Area indices are remapped into
+the combined area list. Pins are projected for display and converted back into original zone coordinates before saving;
+no storage keys or existing records are migrated. Empty space between maps cannot receive a pin.
+
 Pet completion uses `row.f.p.n`, normalized with NFKC, trimmed/collapsed whitespace and case folding. Monster names and
-spawn IDs do not split a pet type: completing Sylphen completes all its named variants across zones. Group arcs count
-completed pet rows; **Hide pets done** removes only entirely completed pet-only groups. Partial/mixed groups and the
-current selection stay visible. Ordinary place completion uses stable row IDs per character and the separate **Hide
-done** setting. Custom pins and saved layer presets are local to the origin.
+spawn IDs do not split a pet type: completing Sylphen completes all its named variants across zones. **Highlight** uses
+the same normalized pet-type key in the optional `highlightedPets` map preference. Existing v1 settings/backups without
+this field default to no highlights; no stored keys or completion records are migrated. Highlighted pets and their spawn
+points stay visible in the current zone after closing the popup, selecting another place, changing layers or hiding
+completed pets. Turning Highlight off restores normal filtering. Highlights are shared across characters and included
+in map backups.
+
+Markers keep one centered border in all four states: idle (neutral), active (primary), done (success), highlight
+(warning), with priority **Highlight → Done → Active → Idle**. Check/star badges distinguish done/highlight beyond color.
+Clusters keep different border states separate. **Hide pets done** removes completed pet-only groups except the current
+selection and highlights. Ordinary place completion uses stable row IDs per character and the separate **Hide done**
+setting. Custom pins and saved layer presets are local to the origin.
+
+Popup selection is transient React state, independent of URL parameters. Loading or reloading the page starts with no
+selection, including when an old URL contains `pin`. Only zone and layer filters read and update URL parameters.
+The popup's spawn-point count comes from the selected row's `f.pts` array, matching that marker's spawn points.
+
+Completed pet rows show the type's portrait and genus, with an icon action to mark it incomplete. The boot snapshot's
+`pets` catalog is derived from all zone rows during sync, so portraits remain available after switching zones. Imported
+types absent from the snapshot keep their name and completion record with a generic completed icon.
 
 Export produces `{format:"soulforge-map", version:1, preferences, petProgress}`. Import validates the whole backup before
 applying it, replaces map preferences and merges completed pet types. Legacy `{version:1,completed:[{name,at}]}` JSON is

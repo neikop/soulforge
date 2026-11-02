@@ -56,16 +56,16 @@ treating an exit code of zero as proof that every convention is satisfied.
 
 Additional checks depend on the change:
 
-| Change                                             | Additional verification                                                                                                      |
-| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Theme tokens, text styles, layer styles or recipes | Run `pnpm chakra-typegen` before `pnpm check`; inspect affected states in light and dark mode.                               |
-| Soul Binding progress parser or migrations         | Run `pnpm test:matrix`; cover the changed migration or input boundary.                                                       |
-| Stored keys, counts or planner data                | Verify independent selections, reload persistence and compatibility with existing keys; run progress tests when affected.    |
-| Shared component API or behavior                   | Update `/components`; check supported keyboard, focus, disabled and controlled/uncontrolled states.                          |
-| Layout or navigation                               | Check both planners, the guide, narrow-screen overflow, active tabs and direct route reloads.                                |
-| Filtering or checklist interaction                 | Check matching and empty results, toggling, live counts and reload persistence.                                              |
-| Interactive Map logic, data or progress            | Run `pnpm test:map`; check map tiles, type-wide completion, partial clusters, backups, direct links, 10× zoom and Full size. |
-| Documentation or editor configuration              | Check referenced local paths, commands and anchors; run the standard gate without changing application behavior.             |
+| Change                                             | Additional verification                                                                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Theme tokens, text styles, layer styles or recipes | Run `pnpm chakra-typegen` before `pnpm check`; inspect affected states in light and dark mode.                                  |
+| Soul Binding progress parser or migrations         | Run `pnpm test:matrix`; cover the changed migration or input boundary.                                                          |
+| Stored keys, counts or planner data                | Verify independent selections, reload persistence and compatibility with existing keys; run progress tests when affected.       |
+| Shared component API or behavior                   | Update `/components`; check supported keyboard, focus, disabled and controlled/uncontrolled states.                             |
+| Layout or navigation                               | Check both planners, the guide, narrow-screen overflow, active tabs and direct route reloads.                                   |
+| Filtering or checklist interaction                 | Check matching and empty results, toggling, live counts and reload persistence.                                                 |
+| Interactive Map logic, data or progress            | Run `pnpm test:map`; check map tiles, type-wide completion, partial clusters, backups, direct links, zoom limits and Full size. |
+| Documentation or editor configuration              | Check referenced local paths, commands and anchors; run the standard gate without changing application behavior.                |
 
 Use the existing Node test setup for logic regressions under `scripts/`. The current `test:matrix` suite covers
 Soul Binding progress parsing and migrations; it does not validate the complete stat pool or Genus recommendations.

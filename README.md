@@ -19,12 +19,12 @@ and the existing configuration under `src/config/`.
 
 ## Pages
 
-| Route              | Page            | Purpose                                                                                    |
-| ------------------ | --------------- | ------------------------------------------------------------------------------------------ |
-| `/`                | Soul Binding    | DPS Matrix, per-item Gear List checklist and Bracelet recommendations for Gladiator.       |
-| `/genus-insight`   | Genus Insight   | Five boards with nine independent targets each, roll priorities and level 9 lock guidance. |
-| `/interactive-map` | Interactive Map | Five zones, local map tiles, filters, spawn points, 10× zoom and progress by pet type.     |
-| `/components`      | Component Guide | Interactive examples of shared UI, typography, theme tokens and component states.          |
+| Route              | Page            | Purpose                                                                                            |
+| ------------------ | --------------- | -------------------------------------------------------------------------------------------------- |
+| `/`                | Soul Binding    | DPS Matrix, per-item Gear List checklist and Bracelet recommendations for Gladiator.               |
+| `/genus-insight`   | Genus Insight   | Five boards with nine independent targets each, roll priorities and level 9 lock guidance.         |
+| `/interactive-map` | Interactive Map | Combined world map, five individual zones, filters, spawn points, up to 20× zoom and pet progress. |
+| `/components`      | Component Guide | Interactive examples of shared UI, typography, theme tokens and component states.                  |
 
 All routes share a compact header, navigation, theme controls and workspace. The app defaults to dark mode and remembers
 the selected mode. Wide tables scroll within their container on smaller screens. Tab indicators respect reduced motion.
@@ -110,6 +110,20 @@ Poeta and Ishalgen have region outlines only. Pet completion is shared by exact 
 is per character. Export/import under **Character, presets & backups** transfers progress between browsers and accepts
 the earlier Console tracker's JSON. SenseOS storage cannot be read automatically from another origin. See the
 [map data and progress contract](docs/game-data.md#interactive-map) for source licenses and update instructions.
+
+The default World map combines Chaotic Abyss at the top, Verteron at the lower left and Altgard at the lower right,
+with their centers forming an equilateral triangle. The individual zones remain selectable. Markers, spawn points,
+search, progress and pins work across the combined view; saved pins retain their original zone coordinates.
+World map zoom reaches 20×; the individual zone views retain their 10× limit.
+
+Pet details have separate Done and Highlight switches. Highlight keeps that pet type's markers and spawn points visible
+after closing the popup and is included in progress backups. Marker borders distinguish idle, active, done and highlight.
+Details open above the selected marker or group, follow the camera and adjust at the map edges. Drag the map with the
+grab cursor; markers and popup controls use the pointer cursor, while popup text uses the text cursor. Pet types have a
+copy-name action; Done and Highlight each have a spacious clickable row.
+Pet details show the selected marker's spawn-point count. Marker clicks, group navigation and closing the popup use
+local state independently of URL parameters. Only zone and layer filters use the URL. The sidebar orders Zone, Search,
+Settings & progress, then Layers.
 
 Camera movement updates a transformed map layer once per animation frame. Markers keep their screen size, reuse
 clusters while panning and render beyond the viewport edges. The overview image stays beneath buffered tiles as they load.

@@ -40,6 +40,8 @@ for (const [mode, palette] of Object.entries(matrixPalette)) {
   }
   for (const [surface, background] of Object.entries(neutral.bg).filter(([name]) => name !== 'overlay')) {
     for (const [role, foreground] of Object.entries(neutral.fg).filter(([role]) => role !== 'inverse')) {
+      // Placeholder uses input surfaces; hover uses fg.muted, checked on every surface below.
+      if (role === 'placeholder' && surface !== 'canvas' && surface !== 'subtle') continue
       checks.push({
         foreground: color(foreground[mode]),
         background: color(background[mode]),

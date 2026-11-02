@@ -8,7 +8,28 @@ export const MAP_ZONES = [
   { key: 'reshanta-lower', name: 'Chaotic Lower Reshanta', faction: 'Abyss', canvas: 4096, image: true },
 ] as const
 
-export type ZoneKey = (typeof MAP_ZONES)[number]['key']
+export const WORLD_MAP = {
+  key: 'world',
+  name: 'World map',
+  faction: 'Atreia',
+  canvas: 5120,
+  image: true,
+  maxZoom: 20,
+} as const
+export const MAP_VIEWS = [WORLD_MAP, ...MAP_ZONES] as const
+export type ZoneKey = (typeof MAP_VIEWS)[number]['key']
+
+const WORLD_MAP_SIZE = 2048
+const WORLD_SIDE = 2560
+const WORLD_HEIGHT = (WORLD_SIDE * Math.sqrt(3)) / 2
+const WORLD_TOP = (WORLD_MAP.canvas - WORLD_MAP_SIZE - WORLD_HEIGHT) / 2
+const WORLD_LEFT = (WORLD_MAP.canvas - WORLD_MAP_SIZE - WORLD_SIDE) / 2
+
+export const WORLD_SURFACES = [
+  { key: 'reshanta-lower', label: 'Chaotic Abyss', x: WORLD_LEFT + WORLD_SIDE / 2, y: WORLD_TOP },
+  { key: 'verteron', label: 'Verteron', x: WORLD_LEFT, y: WORLD_TOP + WORLD_HEIGHT },
+  { key: 'altgard', label: 'Altgard', x: WORLD_LEFT + WORLD_SIDE, y: WORLD_TOP + WORLD_HEIGHT },
+].map((surface) => ({ ...surface, size: WORLD_MAP_SIZE }))
 export const PET_LAYERS = ['pets:Feral', 'pets:Nature', 'pets:Trans', 'pets:Intellect']
 export const MAP_GROUPS = [
   { key: 'travel', label: 'Travel', kinds: ['kibelisk', 'rift', 'dungeon', 'village'], tone: 'info' },
@@ -41,7 +62,7 @@ export const KIND_LABELS: Record<string, string> = {
 }
 
 export function isZoneKey(key: null | string): key is ZoneKey {
-  return MAP_ZONES.some((zone) => zone.key === key)
+  return MAP_VIEWS.some((zone) => zone.key === key)
 }
 
 export function rowName(row: MapRow) {

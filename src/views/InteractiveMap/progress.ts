@@ -8,6 +8,7 @@ export type MapPreferences = {
   borders: boolean
   hideDone: boolean
   hidePetsDone: boolean
+  highlightedPets: string[]
   layers: string[]
   names: boolean
   pins: { i: string; k: 'pin'; n: string; x: number; y: number; zone: string }[]
@@ -24,6 +25,7 @@ export function defaultPreferences(): MapPreferences {
     layers: [...PET_LAYERS],
     hideDone: false,
     hidePetsDone: false,
+    highlightedPets: [],
     names: false,
     areaNames: true,
     borders: false,
@@ -122,6 +124,14 @@ export function parsePreferences(raw: null | string): MapPreferences {
   if (!value || typeof value !== 'object' || !('version' in value) || value.version !== 1)
     throw new Error('Invalid map progress file.')
   const data = value as Record<string, unknown>
+  if ('highlightedPets' in data) {
+    if (
+      !Array.isArray(data.highlightedPets) ||
+      !data.highlightedPets.every((name) => typeof name === 'string' && Boolean(name.trim()))
+    )
+      throw new Error('Invalid highlighted pets.')
+    defaults.highlightedPets = [...new Set(data.highlightedPets.map(petKey))]
+  }
   for (const key of ['hideDone', 'hidePetsDone', 'names', 'areaNames', 'borders'] as const)
     if (typeof data[key] === 'boolean') defaults[key] = data[key]
   if (Array.isArray(data.layers) && data.layers.every((v) => typeof v === 'string')) defaults.layers = data.layers

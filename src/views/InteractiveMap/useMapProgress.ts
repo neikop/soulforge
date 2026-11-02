@@ -78,6 +78,15 @@ export function useMapProgress() {
     })
     setPetDirty(true)
   }
+  function toggleHighlight(name: string, highlighted: boolean) {
+    const key = petKey(name)
+    updatePreferences((previous) => ({
+      ...previous,
+      highlightedPets: highlighted
+        ? [...new Set([...previous.highlightedPets, key])]
+        : previous.highlightedPets.filter((name) => name !== key),
+    }))
+  }
   function importProgress(raw: string) {
     const { preferences: nextPreferences, completed: pets } = parseMapBackup(raw)
     if (nextPreferences) updatePreferences(() => nextPreferences)
@@ -127,6 +136,7 @@ export function useMapProgress() {
     profile,
     updatePreferences,
     togglePet,
+    toggleHighlight,
     toggleDone,
     importProgress,
     exportProgress,

@@ -3,6 +3,7 @@ import { createSystem, defaultConfig, defineConfig, defineTextStyles, type Syste
 import { layerStyles } from './layerStyles'
 import { matrixTextStyles } from './matrixTokens'
 import {
+  accordionRecipe,
   alertRecipe,
   buttonRecipe,
   checkboxRecipe,
@@ -88,6 +89,7 @@ const theme: SystemConfig = {
       link: linkRecipe,
     },
     slotRecipes: {
+      accordion: accordionRecipe,
       alert: alertRecipe,
       checkbox: checkboxRecipe,
       datePicker: datePickerRecipe,

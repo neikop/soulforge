@@ -1,10 +1,24 @@
-import { Box, Button, chakra, Checkbox, HStack, SimpleGrid, Stack, Tabs, Text } from '@chakra-ui/react'
+import {
+  Accordion,
+  Badge,
+  Box,
+  Button,
+  chakra,
+  Checkbox,
+  HStack,
+  SimpleGrid,
+  Stack,
+  Tabs,
+  Text,
+} from '@chakra-ui/react'
+import { Switch } from 'components/ui'
 import { useState } from 'react'
-import { FiCompass, FiMoon, FiSun } from 'react-icons/fi'
+import { FiCheck, FiCompass, FiGlobe, FiMapPin, FiMoon, FiStar, FiSun } from 'react-icons/fi'
 
 import { DocsCard, SectionHeading } from '../shared'
 
 const ZONE_CARD_EXAMPLES = [
+  { key: 'world', name: 'World map', faction: 'Atreia', icon: FiGlobe, tone: 'primary' },
   { key: 'verteron', name: 'Verteron', faction: 'Elyos', icon: FiSun, tone: 'primary' },
   { key: 'poeta', name: 'Poeta', faction: 'Elyos', icon: FiSun, tone: 'primary' },
   { key: 'altgard', name: 'Altgard', faction: 'Asmodian', icon: FiMoon, tone: 'error' },
@@ -14,7 +28,7 @@ const ZONE_CARD_EXAMPLES = [
 
 export function OverviewSection() {
   const [selectedStats, setSelectedStats] = useState<Record<string, boolean>>({ owned: true })
-  const [selectedZone, setSelectedZone] = useState('altgard')
+  const [selectedZone, setSelectedZone] = useState('world')
 
   function handleToggleStat(key: string) {
     setSelectedStats((previous) => ({ ...previous, [key]: !previous[key] }))
@@ -114,6 +128,72 @@ export function OverviewSection() {
           </Checkbox.Root>
         </SimpleGrid>
       </DocsCard>
+      <DocsCard title="Collapsible sections">
+        <Text color="fg.muted" textStyle="bodyCompact">
+          Section headers provide a full hover and focus area. Enter or Space toggles a section; arrow keys move between
+          headers. Spaced cards use no dividers. Expand and collapse use the theme's slow timing and respect reduced
+          motion. Independent actions stay outside the trigger.
+        </Text>
+        <Accordion.Root collapsible defaultValue={['visibility']} multiple>
+          <Accordion.Item value="visibility">
+            <Box as="h3">
+              <Accordion.ItemTrigger>
+                <Accordion.ItemIndicator />
+                <Text as="span" flex={1}>
+                  Visibility
+                </Text>
+                <Badge>2</Badge>
+              </Accordion.ItemTrigger>
+            </Box>
+            <Accordion.ItemContent>
+              <Accordion.ItemBody>
+                <Stack gap={1}>
+                  <Switch defaultChecked layerStyle="mapOption" size="sm">
+                    Show names
+                  </Switch>
+                  <Switch layerStyle="mapOption" size="sm">
+                    Show borders
+                  </Switch>
+                  <Switch disabled layerStyle="mapOption" size="sm">
+                    Unavailable option
+                  </Switch>
+                  <Switch defaultChecked layerStyle="mapOption" readOnly size="sm">
+                    Locked option
+                  </Switch>
+                </Stack>
+              </Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
+          <Accordion.Item value="progress">
+            <Box as="h3">
+              <Accordion.ItemTrigger>
+                <Accordion.ItemIndicator />
+                <Text as="span" flex={1}>
+                  Progress
+                </Text>
+              </Accordion.ItemTrigger>
+            </Box>
+            <Accordion.ItemContent>
+              <Accordion.ItemBody>
+                Multiple sections can remain open. Closing a section keeps its controls mounted.
+              </Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
+          <Accordion.Item disabled value="unavailable">
+            <Box as="h3">
+              <Accordion.ItemTrigger>
+                <Accordion.ItemIndicator />
+                <Text as="span" flex={1}>
+                  Unavailable section
+                </Text>
+              </Accordion.ItemTrigger>
+            </Box>
+            <Accordion.ItemContent>
+              <Accordion.ItemBody>This section is disabled.</Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
+        </Accordion.Root>
+      </DocsCard>
       <DocsCard title="Map surfaces">
         <Stack gap={2} mb={3}>
           <Text color="fg.subtle" textStyle="meta">
@@ -126,12 +206,10 @@ export function OverviewSection() {
               return (
                 <Button
                   aria-pressed={isSelected}
+                  gridColumn={item.key === 'world' || item.faction === 'Abyss' ? 'span 2' : undefined}
                   key={item.key}
                   layerStyle="mapZoneOption"
                   onClick={() => setSelectedZone(item.key)}
-                  {...(isSelected
-                    ? { bg: 'bg.elevated', borderColor: 'primary.fg' }
-                    : { borderColor: 'border.default' })}
                 >
                   <HStack align="center" gap={2} minW={0} width="full">
                     <Box
@@ -160,7 +238,7 @@ export function OverviewSection() {
             })}
           </SimpleGrid>
         </Stack>
-        <Box height="180px" layerStyle="mapShell" position="relative">
+        <Box height="340px" layerStyle="mapShell" position="relative">
           <Box height="full" layerStyle="mapStage" tabIndex={0}>
             <Box
               css={{ '--map-inverse-scale': 0.8 }}
@@ -170,40 +248,59 @@ export function OverviewSection() {
               transformOrigin="0 0"
               width="full"
             >
-              <chakra.button aria-label="Example map marker" layerStyle="mapMarker" left="20%" top="50%" type="button">
-                <Box as="span" layerStyle="mapGroupBadge">
-                  2
-                </Box>
-                <chakra.svg
-                  aria-hidden="true"
-                  height="40px"
-                  left="-3px"
-                  position="absolute"
-                  top="-3px"
-                  viewBox="0 0 40 40"
-                  width="40px"
+              {(['idle', 'active', 'done', 'highlight'] as const).map((state, index) => (
+                <chakra.button
+                  aria-label={`Example ${state} map marker`}
+                  aria-pressed={state === 'active'}
+                  data-marker-state={state}
+                  key={state}
+                  layerStyle="mapMarker"
+                  left={`${12 + index * 20}%`}
+                  top="20%"
+                  type="button"
                 >
-                  <chakra.circle
-                    cx="20"
-                    cy="20"
-                    fill="none"
-                    pathLength={100}
-                    r="18"
-                    stroke="warning.solid"
-                    strokeDasharray="50 100"
-                    strokeWidth="3"
-                    transform="rotate(-90 20 20)"
-                  />
-                </chakra.svg>
-              </chakra.button>
-              <Box layerStyle="mapSpawn" left="35%" top="65%" />
+                  <FiMapPin />
+                  {(state === 'done' || state === 'highlight') && (
+                    <Box aria-hidden="true" data-marker-state={state} layerStyle="mapMarkerStatus">
+                      {state === 'done' ? <FiCheck size={10} /> : <FiStar size={10} />}
+                    </Box>
+                  )}
+                  <Text as="span" position="absolute" textStyle="bodyCompact" top="calc(100% + 8px)">
+                    {state}
+                  </Text>
+                </chakra.button>
+              ))}
+              <Box data-marker-state="active" layerStyle="mapSpawn" left="32%" top="35%" />
+              <Box data-marker-state="highlight" layerStyle="mapSpawn" left="72%" top="35%" />
             </Box>
-            <Box layerStyle="mapCard" maxW="55%" p={3} position="absolute" right={3} top={3}>
-              <Text textStyle="titleCompact">Map details</Text>
+            <Stack bottom={3} gap={2} layerStyle="mapCard" left={3} p={3} position="absolute" right={3}>
+              <Text textStyle="titleCompact">Pet controls</Text>
+              <HStack justify="space-between">
+                <chakra.label htmlFor="guide-map-done" textStyle="actionCompact">
+                  Done
+                </chakra.label>
+                <Switch
+                  colorPalette="success"
+                  hiddenInputProps={{ id: 'guide-map-done', 'aria-label': 'Example pet done' }}
+                  size="sm"
+                />
+              </HStack>
+              <HStack justify="space-between">
+                <chakra.label htmlFor="guide-map-highlight" textStyle="actionCompact">
+                  Highlight
+                </chakra.label>
+                <Switch
+                  colorPalette="warning"
+                  defaultChecked
+                  hiddenInputProps={{ id: 'guide-map-highlight', 'aria-label': 'Example pet highlight' }}
+                  size="sm"
+                />
+              </HStack>
               <Text color="fg.muted" textStyle="bodyCompact">
-                Markers and spawn points keep their size as the map scales. Amber arcs show partial progress.
+                Centered borders keep their size at every zoom. Highlight keeps spawn points visible. Border priority:
+                Highlight → Done → Active → Idle.
               </Text>
-            </Box>
+            </Stack>
           </Box>
         </Box>
       </DocsCard>

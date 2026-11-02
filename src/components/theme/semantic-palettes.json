@@ -100,6 +100,10 @@
         "dark": "#91a7c1",
         "light": "#52657c"
       },
+      "placeholder": {
+        "dark": "#7c8fa8",
+        "light": "#637288"
+      },
       "subtle": {
         "dark": "#91a7c1",
         "light": "#52657c"

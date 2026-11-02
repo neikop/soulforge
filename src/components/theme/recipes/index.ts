@@ -1,3 +1,4 @@
+export { accordionRecipe } from './accordion.recipe'
 export { alertRecipe } from './alert.recipe'
 export { buttonRecipe } from './button.recipe'
 export { checkboxRecipe } from './checkbox.recipe'

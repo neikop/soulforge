@@ -1,9 +1,9 @@
-import { Checkbox, Code, Separator, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { Checkbox, Code, Heading, Separator, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import Select, { ChakraSelect, type SelectOption } from 'components/select'
 import { FormField } from 'components/ui'
 import { useMemo, useState } from 'react'
 
-import { DocsCard, SectionHeading } from '../shared'
+import { SectionHeading } from '../shared'
 
 const fruitOptions: SelectOption[] = [
   { label: 'Apple', value: 'apple' },
@@ -37,8 +37,11 @@ export function SelectSection() {
         title="Two select implementations, one comparison surface."
       />
 
-      <DocsCard title="Comparison">
-        <Stack gap={6}>
+      <Stack gap={0} layerStyle="panel">
+        <Stack gap={4} p={{ base: 5, md: 6 }}>
+          <Heading as="h3" textStyle="title">
+            Comparison
+          </Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <FormField htmlFor="guide-react-select" label="React Select wrapper">
               <Select
@@ -69,93 +72,87 @@ export function SelectSection() {
             selected states. Its outer control follows Chakra Input's inside outline; focus or an open menu activates
             the theme focus ring, while invalid state uses the error border and ring.
           </Text>
-
-          <Separator />
-
-          <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-            <FormField htmlFor="guide-react-select-multi" label="Wrapper uncontrolled multi">
-              <Select
-                defaultValue={[fruitOptions[0], fruitOptions[2]]}
-                inputId="guide-react-select-multi"
-                isClearable
-                isMulti
-                options={fruitOptions}
-                placeholder="Pick some fruits"
-              />
-              <Text color="fg.subtle" textStyle="body">
-                Starts with `defaultValue`, then manages its own state.
-              </Text>
-            </FormField>
-
-            <FormField htmlFor="guide-react-select-controlled" label="Wrapper menu controlled">
-              <Checkbox.Root
-                checked={isMenuPinnedOpen}
-                onCheckedChange={({ checked }) => setIsMenuPinnedOpen(checked === true)}
-              >
-                <Checkbox.HiddenInput />
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
-                <Checkbox.Label>Keep menu open</Checkbox.Label>
-              </Checkbox.Root>
-
-              <Select
-                inputId="guide-react-select-controlled"
-                menuIsOpen={isMenuPinnedOpen}
-                onChange={(value) => setSelectedFruit(value)}
-                onMenuClose={() => setIsMenuPinnedOpen(false)}
-                options={fruitOptions.concat(frameworkOptions)}
-                placeholder="Open state can be controlled"
-                value={selectedFruit}
-              />
-              <Text color="fg.subtle" textStyle="body">
-                Toggle the checkbox to pin the menu open, then close it from the control flow.
-              </Text>
-            </FormField>
-          </SimpleGrid>
-
-          <Separator />
-
-          <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
-            <FormField htmlFor="guide-react-select-disabled" label="Disabled">
-              <Select inputId="guide-react-select-disabled" isDisabled options={fruitOptions} value={fruitOptions[0]} />
-            </FormField>
-
-            <FormField htmlFor="guide-react-select-loading" label="Loading">
-              <Select
-                inputId="guide-react-select-loading"
-                isLoading
-                options={fruitOptions}
-                placeholder="Loading fruit"
-              />
-            </FormField>
-
-            <FormField
-              error="Choose at least one fruit."
-              htmlFor="guide-react-select-invalid"
-              label="Invalid"
-              messageId="guide-react-select-invalid-message"
-            >
-              <Select
-                aria-describedby="guide-react-select-invalid-message"
-                inputId="guide-react-select-invalid"
-                isInvalid
-                options={fruitOptions}
-              />
-            </FormField>
-
-            <FormField htmlFor="guide-chakra-select-readonly" label="Chakra read only">
-              <ChakraSelect
-                id="guide-chakra-select-readonly"
-                options={frameworkOptions}
-                placeholder="Choose a stack"
-                readOnly
-                value="chakra"
-              />
-            </FormField>
-          </SimpleGrid>
+          <Text color="fg.muted" textStyle="bodyCompact">
+            Dividers span both edges of the surface. Each section owns its padding; the outer wrapper has none.
+          </Text>
         </Stack>
-      </DocsCard>
+        <Separator />
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} p={{ base: 5, md: 6 }}>
+          <FormField htmlFor="guide-react-select-multi" label="Wrapper uncontrolled multi">
+            <Select
+              defaultValue={[fruitOptions[0], fruitOptions[2]]}
+              inputId="guide-react-select-multi"
+              isClearable
+              isMulti
+              options={fruitOptions}
+              placeholder="Pick some fruits"
+            />
+            <Text color="fg.subtle" textStyle="body">
+              Starts with `defaultValue`, then manages its own state.
+            </Text>
+          </FormField>
+
+          <FormField htmlFor="guide-react-select-controlled" label="Wrapper menu controlled">
+            <Checkbox.Root
+              checked={isMenuPinnedOpen}
+              onCheckedChange={({ checked }) => setIsMenuPinnedOpen(checked === true)}
+            >
+              <Checkbox.HiddenInput />
+              <Checkbox.Control>
+                <Checkbox.Indicator />
+              </Checkbox.Control>
+              <Checkbox.Label>Keep menu open</Checkbox.Label>
+            </Checkbox.Root>
+
+            <Select
+              inputId="guide-react-select-controlled"
+              menuIsOpen={isMenuPinnedOpen}
+              onChange={(value) => setSelectedFruit(value)}
+              onMenuClose={() => setIsMenuPinnedOpen(false)}
+              options={fruitOptions.concat(frameworkOptions)}
+              placeholder="Open state can be controlled"
+              value={selectedFruit}
+            />
+            <Text color="fg.subtle" textStyle="body">
+              Toggle the checkbox to pin the menu open, then close it from the control flow.
+            </Text>
+          </FormField>
+        </SimpleGrid>
+        <Separator />
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4} p={{ base: 5, md: 6 }}>
+          <FormField htmlFor="guide-react-select-disabled" label="Disabled">
+            <Select inputId="guide-react-select-disabled" isDisabled options={fruitOptions} value={fruitOptions[0]} />
+          </FormField>
+
+          <FormField htmlFor="guide-react-select-loading" label="Loading">
+            <Select inputId="guide-react-select-loading" isLoading options={fruitOptions} placeholder="Loading fruit" />
+          </FormField>
+
+          <FormField
+            error="Choose at least one fruit."
+            htmlFor="guide-react-select-invalid"
+            label="Invalid"
+            messageId="guide-react-select-invalid-message"
+          >
+            <Select
+              aria-describedby="guide-react-select-invalid-message"
+              inputId="guide-react-select-invalid"
+              isInvalid
+              options={fruitOptions}
+            />
+          </FormField>
+
+          <FormField htmlFor="guide-chakra-select-readonly" label="Chakra read only">
+            <ChakraSelect
+              id="guide-chakra-select-readonly"
+              options={frameworkOptions}
+              placeholder="Choose a stack"
+              readOnly
+              value="chakra"
+            />
+          </FormField>
+        </SimpleGrid>
+      </Stack>
     </Stack>
   )
 }

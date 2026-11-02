@@ -28,6 +28,11 @@ export function InputSection() {
             </FormField>
           </SimpleGrid>
 
+          <Text color="fg.muted" textStyle="bodyCompact">
+            Empty inputs use a softer, italic placeholder. Enter text to compare it with the normal input value;
+            hovering increases placeholder contrast.
+          </Text>
+
           <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
             <FormField htmlFor="guide-input-small" label="Small">
               <Input id="guide-input-small" placeholder="Small input" size="sm" />

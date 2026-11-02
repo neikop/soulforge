@@ -142,7 +142,7 @@ Before creating or promoting a common component, choose the smallest correct abs
 
 ### Common surface defaults
 
-- Table, Dialog, Drawer, Alert, and Empty State receive app defaults through focused slot recipes in
+- Accordion, Table, Dialog, Drawer, Alert, and Empty State receive app defaults through focused slot recipes in
   `components/theme/recipes`.
 - Import Table, Alert, and Empty State directly from Chakra; their visual consistency belongs to the theme, while product
   data, actions, copy, sorting, filtering, pagination state and data wiring, and reserved height stay feature-owned.
@@ -152,6 +152,10 @@ Before creating or promoting a common component, choose the smallest correct abs
   composition. Keep Chakra Root visible so open state, focus policy, dismissal, placement, size, and modal behavior remain
   explicit at the consumer.
 - Do not create additional wrappers that mirror Chakra compound parts or duplicate these two overlay compositions.
+- Use Chakra Accordion directly for collapsible sections. The default subtle recipe owns header hover, open, focus,
+  disabled and reduced-motion states, with spaced cards instead of dividers and the theme's slow expand/collapse timing.
+  Place each trigger inside a heading; keep independent actions beside the heading,
+  outside the trigger. Features own initial expansion and whether multiple sections can remain open.
 
 ## Theme, styling, and layout
 
@@ -162,6 +166,9 @@ Before creating or promoting a common component, choose the smallest correct abs
 - Use `Grid`, `SimpleGrid`, `Flex`, `Stack`, or `HStack` for layout and gaps for sibling spacing; the parent owns the
   spacing between children.
 - Use padding inside a surface; reserve margin for exceptions such as `auto` centering.
+- Dividers must reach both edges of their containing surface. Keep the outer wrapper unpadded with no gap across the
+  divider; give each content section its own padding. Apply the same structure to border-based dividers; do not use
+  negative margins to escape a padded wrapper. Vertical dividers reach the top and bottom edges of their surface.
 - Keep `App.scss` for truly global styles only; avoid global component selectors and `!important`.
 - Run `pnpm chakra-typegen` after changing tokens, text styles, or recipes.
 
@@ -267,6 +274,8 @@ Before creating or promoting a common component, choose the smallest correct abs
   interaction contract and must not expose actions that are currently locked.
 - Keep label typography, icon size, border width, padding, and outer geometry stable across states; a semantic state may
   change emphasis or feedback, not unexpectedly move surrounding content.
+- Input placeholders use `fg.placeholder` and italic text on input surfaces, with `fg.muted` on hover. Entered values
+  retain the normal field typography and `fg.default` color.
 - Add representative states to `/components`; do not document or style a state that the public component cannot express.
 
 ## Accessibility

@@ -7,8 +7,14 @@ export const inputRecipe = defineRecipe({
     borderRadius: 'sm',
     color: 'fg.default',
     '--error-color': '{colors.error.border}',
-    _placeholder: { color: 'fg.muted' },
-    _hover: { borderColor: 'primary.border' },
+    _placeholder: {
+      color: 'fg.placeholder',
+      fontStyle: 'italic',
+      fontSynthesis: 'style',
+      fontWeight: 'normal',
+      opacity: 1,
+    },
+    _hover: { borderColor: 'primary.border', _placeholder: { color: 'fg.muted' } },
     _focusVisible: {
       borderColor: 'primary.focusRing',
       outlineColor: 'primary.focusRing',

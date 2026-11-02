@@ -182,6 +182,11 @@ const bootMatch = page.bytes
 if (!bootMatch) throw new Error('Map boot data was not found')
 const boot = JSON.parse(bootMatch[1])
 if (!Array.isArray(boot.timers) || !boot.clocks || !boot.tasks) throw new Error('Unexpected map boot data')
+boot.pets = [
+  ...new Map(
+    [...zoneData.values()].flatMap((zone) => zone.rows.flatMap((row) => (row.f?.p ? [[row.f.p.n, row.f.p]] : []))),
+  ).values(),
+].sort((a, b) => a.n.localeCompare(b.n))
 records.push({ ...(await saveJson('data/boot.json', boot)), url: `${PAGE}#data-am-boot` })
 const drops = await request('/data/aion-2/map/drops.json')
 records.push({ ...(await saveJson('data/drops.json', JSON.parse(drops.bytes.toString('utf8')))), url: drops.url })
@@ -222,7 +227,7 @@ const manifest = {
     software:
       'No SenseOS or upstream application source code is distributed by this snapshot. Upstream aion2-interactive-map /src is separately GPL-3.0.',
     changes:
-      'Original map coordinates, identifiers, names and fields retained. JSON formatting changed; data served locally. Soulforge progress is separate from source data.',
+      'Original map coordinates, identifiers, names and fields retained. JSON formatting changed; data served locally. Pet portrait catalog derived from zone rows. Soulforge progress is separate from source data.',
   },
   attribution: [
     { name: 'SenseOS AION 2 Interactive Map', url: PAGE },

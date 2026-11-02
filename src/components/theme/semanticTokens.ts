@@ -91,6 +91,7 @@ export const semanticTokens = defineSemanticTokens({
       default: createModeColor(semanticPaletteConfig.neutral.fg.default),
       inverse: createModeColor(semanticPaletteConfig.neutral.fg.inverse),
       muted: createModeColor(semanticPaletteConfig.neutral.fg.muted),
+      placeholder: createModeColor(semanticPaletteConfig.neutral.fg.placeholder),
       subtle: createModeColor(semanticPaletteConfig.neutral.fg.subtle),
     },
     ...semanticPalettes,

@@ -3,6 +3,7 @@ import type { MapRow } from 'services/map'
 export type Camera = { x: number; y: number; zoom: number }
 export type Viewport = { height: number; width: number }
 export type MapCluster = { id: string; rows: MapRow[]; x: number; y: number }
+export type MapMarkerState = 'active' | 'done' | 'highlight' | 'idle'
 export const MIN_ZOOM = 0.5
 export const MAX_ZOOM = 10
 export const MAP_RENDER_MARGIN = 256
@@ -30,9 +31,10 @@ export function zoomCamera(
   y: number,
   viewport: Viewport,
   canvas: number,
+  maxZoom = MAX_ZOOM,
 ): Camera {
   const anchor = toCanvas(x, y, camera, viewport, canvas)
-  const zoom = clamp(camera.zoom * factor, MIN_ZOOM, MAX_ZOOM)
+  const zoom = clamp(camera.zoom * factor, MIN_ZOOM, maxZoom)
   const scale = cameraScale({ ...camera, zoom }, viewport, canvas)
   return {
     x: clamp(anchor.x - (x - viewport.width / 2) / scale, 0, canvas),
@@ -41,13 +43,18 @@ export function zoomCamera(
   }
 }
 
-export function clusterRows(rows: MapRow[], scale: number, selected = ''): MapCluster[] {
+export function clusterRows(
+  rows: MapRow[],
+  scale: number,
+  selected = '',
+  states?: ReadonlyMap<string, MapMarkerState>,
+): MapCluster[] {
   const groups = new Map<string, MapRow[]>()
   for (const row of rows) {
     const id =
       row.i === selected
         ? `selected:${row.i}`
-        : `${Math.floor((row.x * scale) / 38)}:${Math.floor((row.y * scale) / 38)}`
+        : `${Math.floor((row.x * scale) / 38)}:${Math.floor((row.y * scale) / 38)}:${states?.get(row.i) || 'idle'}`
     const members = groups.get(id)
     if (members) members.push(row)
     else groups.set(id, [row])
@@ -96,6 +103,25 @@ export function clusterProgress(rows: MapRow[], completed: Record<string, string
   return { done, total: pets.length, hidden: pets.length === rows.length && pets.length > 0 && done === pets.length }
 }
 
+export function isPetHighlighted(row: MapRow, highlighted: ReadonlySet<string>) {
+  return row.k === 'pets' && Boolean(row.f?.p && highlighted.has(petKey(row.f.p.n)))
+}
+
+type MarkerContext = {
+  completed: Record<string, string>
+  done: ReadonlySet<string>
+  highlighted: ReadonlySet<string>
+  selected: ReadonlySet<string>
+}
+
+export function markerState(row: MapRow, context: MarkerContext): MapMarkerState {
+  if (isPetHighlighted(row, context.highlighted)) return 'highlight'
+  const pet = row.k === 'pets' ? row.f?.p : undefined
+  if (pet ? Object.hasOwn(context.completed, petKey(pet.n)) : context.done.has(row.i)) return 'done'
+  if (context.selected.has(row.i)) return 'active'
+  return 'idle'
+}
+
 export function parseCoordinates(query: string, canvas: number) {
   const match = query.trim().match(/^(\d+(?:\.\d+)?)\s*[, ]\s*(\d+(?:\.\d+)?)$/)
   if (!match) return null
@@ -104,11 +130,16 @@ export function parseCoordinates(query: string, canvas: number) {
   return x <= canvas && y <= canvas ? { x, y } : null
 }
 
-export function selectedSpawns(rows: MapRow[]) {
-  const points = new Map<string, [number, number]>()
-  for (const row of rows)
+export function visibleSpawns(rows: MapRow[], selected: MapRow[], highlighted: ReadonlySet<string>) {
+  const points = new Map<string, { state: 'active' | 'highlight'; x: number; y: number }>()
+  for (const row of [...selected, ...rows.filter((row) => isPetHighlighted(row, highlighted))]) {
+    const state = isPetHighlighted(row, highlighted) ? 'highlight' : 'active'
     for (const point of row.f?.pts || []) {
-      if (Number.isFinite(point[0]) && Number.isFinite(point[1])) points.set(`${point[0]}:${point[1]}`, point)
+      if (Number.isFinite(point[0]) && Number.isFinite(point[1])) {
+        const key = `${point[0]}:${point[1]}`
+        if (points.get(key)?.state !== 'highlight') points.set(key, { x: point[0], y: point[1], state })
+      }
     }
+  }
   return [...points.values()]
 }

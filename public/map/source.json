@@ -8,7 +8,7 @@
     "data": "Places attributed by SenseOS to Yihao Liu (tc-imba) and jonboy648 under CC BY-NC 4.0; preserve attribution, indicate adaptations, non-commercial use only.",
     "art": "Map markers, maps, pets and material pictures are NC's. Sharp tiles, monster portraits and drop rates are sourced by SenseOS from MetaBot.GG. No independent license grant for this artwork was verified; not affiliated with NC or MetaBot.GG.",
     "software": "No SenseOS or upstream application source code is distributed by this snapshot. Upstream aion2-interactive-map /src is separately GPL-3.0.",
-    "changes": "Original map coordinates, identifiers, names and fields retained. JSON formatting changed; data served locally. Soulforge progress is separate from source data."
+    "changes": "Original map coordinates, identifiers, names and fields retained. JSON formatting changed; data served locally. Pet portrait catalog derived from zone rows. Soulforge progress is separate from source data."
   },
   "attribution": [
     { "name": "SenseOS AION 2 Interactive Map", "url": "https://senseos.gg/wiki/aion-2/interactive-map/" },
@@ -86,7 +86,7 @@
   ],
   "counts": {
     "files": 1166,
-    "bytes": 7274691,
+    "bytes": 7288612,
     "backgrounds": 3,
     "tiles": 768,
     "pets": 154,
@@ -122,8 +122,8 @@
     },
     {
       "file": "data/boot.json",
-      "bytes": 3509,
-      "sha256": "8d7b8a7723b6c7456b291cd763df6eb8f0d73e879292fde1af7b6576633c0e0d",
+      "bytes": 17430,
+      "sha256": "4a98631f028af5a9f38ee56e31f36f983c45cfa73be7b77aecf0558d5f598232",
       "url": "https://senseos.gg/wiki/aion-2/interactive-map/#data-am-boot"
     },
     {

@@ -7,23 +7,27 @@ import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { fetchMapBoot, fetchMapZone } from 'services/map'
 
-import { isZoneKey, MAP_ZONES, rowLayer, rowName } from './data'
+import { isZoneKey, MAP_VIEWS, rowLayer, rowName, WORLD_SURFACES } from './data'
 import MapCanvas, { type MapCanvasHandle } from './MapCanvas'
 import MapDetails from './MapDetails'
-import { parseCoordinates, petKey } from './mapLogic'
+import { isPetHighlighted, parseCoordinates, petKey } from './mapLogic'
 import MapSidebar from './MapSidebar'
 import { useMapProgress } from './useMapProgress'
+import { composeWorldMap, projectWorldRow, worldLocation } from './worldMap'
 
 export default function InteractiveMap() {
   const [params, setParams] = useSearchParams()
   const requestedZone = params.get('zone')
-  const zoneKey = isZoneKey(requestedZone) ? requestedZone : 'verteron'
-  const zone = MAP_ZONES.find((zone) => zone.key === zoneKey) || MAP_ZONES[0]
+  const zoneKey = isZoneKey(requestedZone) ? requestedZone : 'world'
+  const zone = MAP_VIEWS.find((zone) => zone.key === zoneKey) || MAP_VIEWS[0]
   const progress = useMapProgress()
   const { preferences } = progress
   const data = useQuery({
     queryKey: ['map', 'zone', zoneKey],
-    queryFn: ({ signal }) => fetchMapZone(zoneKey, signal),
+    queryFn: async ({ signal }) =>
+      zoneKey === 'world'
+        ? composeWorldMap(await Promise.all(WORLD_SURFACES.map((surface) => fetchMapZone(surface.key, signal))))
+        : fetchMapZone(zoneKey, signal),
     staleTime: Infinity,
   })
   const boot = useQuery({
@@ -32,22 +36,35 @@ export default function InteractiveMap() {
     staleTime: Infinity,
   })
   const [query, setQuery] = useState('')
-  const [groupIds, setGroupIds] = useState<string[]>([])
-  const [isHidden, setHidden] = useState(false)
+  const [selection, setSelection] = useState<{ groupIds: string[]; pin: string; zone: string }>({
+    groupIds: [],
+    pin: '',
+    zone: zoneKey,
+  })
   const [isExpanded, setExpanded] = useState(false)
   const canvas = useRef<MapCanvasHandle>(null)
   const expandTrigger = useRef<HTMLElement | null>(null)
-  const pin = params.get('pin') || ''
+  const pin = selection.zone === zoneKey ? selection.pin : ''
   const layers = params.has('show') ? params.get('show')?.split(',').filter(Boolean) || [] : preferences.layers
-  const pins = preferences.pins.filter((pin) => pin.zone === zoneKey)
+  const pins =
+    zoneKey === 'world'
+      ? preferences.pins
+          .filter((pin) => WORLD_SURFACES.some((surface) => surface.key === pin.zone))
+          .map((pin) => projectWorldRow(pin, pin.zone))
+      : preferences.pins.filter((pin) => pin.zone === zoneKey)
   const rows: MapRow[] = [...(data.data?.rows || []), ...pins]
   const spot = parseCoordinates(pin, zone.canvas)
   const row: MapRow | null =
     rows.find((row) => row.i === pin) || (spot ? { i: 'spot', k: 'pin', n: 'Selected location', ...spot } : null)
-  const members = groupIds.map((id) => rows.find((row) => row.i === id)).filter((row): row is MapRow => Boolean(row))
+  const members = (selection.zone === zoneKey ? selection.groupIds : [])
+    .map((id) => rows.find((row) => row.i === id))
+    .filter((row): row is MapRow => Boolean(row))
   const selected = row ? [row] : members
+  const highlighted = new Set(preferences.highlightedPets)
   const filtered = rows.filter(
-    (item) => layers.includes(rowLayer(item)) && !(preferences.hideDone && progress.profile.done.includes(item.i)),
+    (item) =>
+      isPetHighlighted(item, highlighted) ||
+      (layers.includes(rowLayer(item)) && !(preferences.hideDone && progress.profile.done.includes(item.i))),
   )
   for (const selectedRow of selected) if (!filtered.some((row) => row.i === selectedRow.i)) filtered.push(selectedRow)
   const normalizedQuery = query.trim().toLocaleLowerCase()
@@ -58,7 +75,8 @@ export default function InteractiveMap() {
         )
         .slice(0, 24)
     : []
-  const jump = parseCoordinates(query, zone.canvas)
+  const coordinates = parseCoordinates(query, zone.canvas)
+  const jump = coordinates && (zoneKey !== 'world' || worldLocation(coordinates)) ? coordinates : null
   const petTypes = [
     ...new Set(
       data.data?.rows
@@ -70,16 +88,7 @@ export default function InteractiveMap() {
   const doneCount = petTypes.filter((name) => Object.hasOwn(progress.completed, petKey(name))).length
 
   function close() {
-    setGroupIds([])
-    setHidden(false)
-    setParams(
-      (previous) => {
-        const next = new URLSearchParams(previous)
-        next.delete('pin')
-        return next
-      },
-      { replace: true },
-    )
+    setSelection({ groupIds: [], pin: '', zone: zoneKey })
   }
   function handleLayers(layers: string[]) {
     progress.updatePreferences((previous) => ({ ...previous, layers }))
@@ -93,33 +102,26 @@ export default function InteractiveMap() {
     )
   }
   function handleSelect(row: MapRow, shouldJump = false) {
-    setHidden(false)
-    setParams(
-      (previous) => {
-        const next = new URLSearchParams(previous)
-        next.set('zone', zoneKey)
-        next.set('pin', row.i === 'spot' ? `${Math.round(row.x)},${Math.round(row.y)}` : row.i)
-        return next
-      },
-      { replace: true },
-    )
+    setSelection((previous) => ({
+      groupIds: shouldJump || previous.zone !== zoneKey ? [] : previous.groupIds,
+      pin: row.i === 'spot' ? `${Math.round(row.x)},${Math.round(row.y)}` : row.i,
+      zone: zoneKey,
+    }))
     if (shouldJump) canvas.current?.jump(row)
   }
   function handleZone(key: string) {
     if (!isZoneKey(key)) return
-    setGroupIds([])
+    setSelection({ groupIds: [], pin: '', zone: key })
     setQuery('')
-    setHidden(false)
     setParams((previous) => {
       const next = new URLSearchParams(previous)
       next.set('zone', key)
-      next.delete('pin')
       return next
     })
   }
   function handleSpot(point: { x: number; y: number }) {
-    setGroupIds([])
-    handleSelect({ i: 'spot', k: 'pin', ...point })
+    if (zoneKey === 'world' && !worldLocation(point)) return
+    setSelection({ groupIds: [], pin: `${Math.round(point.x)},${Math.round(point.y)}`, zone: zoneKey })
   }
   function toggleExpanded() {
     if (!isExpanded)
@@ -161,7 +163,7 @@ export default function InteractiveMap() {
         layerStyle="mapShell"
         minH={isExpanded ? 0 : '600px'}
         position={isExpanded ? 'fixed' : 'relative'}
-        templateColumns={{ base: 'minmax(0, 1fr)', lg: '280px minmax(0, 1fr)' }}
+        templateColumns={{ base: 'minmax(0, 1fr)', lg: '304px minmax(0, 1fr)' }}
         templateRows={{ base: 'minmax(0, 1fr) auto', lg: 'minmax(0, 1fr)' }}
         width={isExpanded ? '100vw' : 'full'}
         zIndex={isExpanded ? 'modal' : undefined}
@@ -186,11 +188,11 @@ export default function InteractiveMap() {
             onLayers={handleLayers}
             onQuery={setQuery}
             onSelect={(row) => {
-              setGroupIds([])
               handleSelect(row, true)
               if (!layers.includes(rowLayer(row))) handleLayers([...layers, rowLayer(row)])
             }}
             onZone={handleZone}
+            pets={boot.data?.pets}
             progress={progress}
             query={query}
             results={results}
@@ -212,27 +214,19 @@ export default function InteractiveMap() {
               borders={preferences.borders}
               completed={progress.completed}
               data={data.data}
+              done={progress.profile.done}
               hidePetsDone={preferences.hidePetsDone}
+              highlightedPets={preferences.highlightedPets}
               isExpanded={isExpanded}
               key={zoneKey}
               names={preferences.names}
               onClose={close}
               onCluster={(rows) => {
-                if (rows.length === 1 && rows[0]) {
-                  setGroupIds([])
-                  handleSelect(rows[0])
-                } else {
-                  setGroupIds(rows.map((row) => row.i))
-                  setHidden(false)
-                  setParams(
-                    (previous) => {
-                      const next = new URLSearchParams(previous)
-                      next.delete('pin')
-                      return next
-                    },
-                    { replace: true },
-                  )
-                }
+                setSelection({
+                  groupIds: rows.length > 1 ? rows.map((row) => row.i) : [],
+                  pin: rows.length === 1 ? rows[0]?.i || '' : '',
+                  zone: zoneKey,
+                })
               }}
               onExpand={toggleExpanded}
               onSpot={handleSpot}
@@ -244,21 +238,9 @@ export default function InteractiveMap() {
               <MapDetails
                 boot={boot.data}
                 data={data.data}
-                isHidden={isHidden}
                 members={members}
-                onBack={() => {
-                  setHidden(false)
-                  setParams(
-                    (previous) => {
-                      const next = new URLSearchParams(previous)
-                      next.delete('pin')
-                      return next
-                    },
-                    { replace: true },
-                  )
-                }}
+                onBack={() => setSelection((previous) => ({ ...previous, pin: '' }))}
                 onClose={close}
-                onHide={setHidden}
                 onRemovePin={(row) => {
                   progress.updatePreferences((previous) => ({
                     ...previous,
@@ -267,12 +249,14 @@ export default function InteractiveMap() {
                   close()
                 }}
                 onSavePin={(row) => {
+                  const location = zoneKey === 'world' ? worldLocation(row) : { x: row.x, y: row.y, zone: zoneKey }
+                  if (!location) return
                   const saved = {
                     ...row,
+                    ...location,
                     i: `pin:${crypto.randomUUID()}`,
                     k: 'pin' as const,
                     n: 'My pin',
-                    zone: zoneKey,
                   }
                   progress.updatePreferences((previous) => ({ ...previous, pins: [...previous.pins, saved] }))
                   handleLayers([...new Set([...layers, 'pin'])])
